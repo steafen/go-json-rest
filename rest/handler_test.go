@@ -1,10 +1,12 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"io/ioutil"
 	"log"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestHandler(t *testing.T) {
@@ -15,11 +17,11 @@ func TestHandler(t *testing.T) {
 		ErrorLogger: log.New(ioutil.Discard, "", 0),
 	}
 	handler.SetRoutes(
-		Get("/r/:id", func(w ResponseWriter, r *Request) {
+		Get("/r/:id", func(ctx context.Context, w ResponseWriter, r *Request) {
 			id := r.PathParam("id")
 			w.WriteJson(map[string]string{"Id": id})
 		}),
-		Post("/r/:id", func(w ResponseWriter, r *Request) {
+		Post("/r/:id", func(ctx context.Context, w ResponseWriter, r *Request) {
 			// JSON echo
 			data := map[string]string{}
 			err := r.DecodeJsonPayload(&data)
@@ -28,14 +30,14 @@ func TestHandler(t *testing.T) {
 			}
 			w.WriteJson(data)
 		}),
-		Get("/auto-fails", func(w ResponseWriter, r *Request) {
+		Get("/auto-fails", func(ctx context.Context, w ResponseWriter, r *Request) {
 			a := []int{}
 			_ = a[0]
 		}),
-		Get("/user-error", func(w ResponseWriter, r *Request) {
+		Get("/user-error", func(ctx context.Context, w ResponseWriter, r *Request) {
 			Error(w, "My error", 500)
 		}),
-		Get("/user-notfound", func(w ResponseWriter, r *Request) {
+		Get("/user-notfound", func(ctx context.Context, w ResponseWriter, r *Request) {
 			NotFound(w, r)
 		}),
 	)

@@ -3,6 +3,8 @@ package rest
 import (
 	"testing"
 
+	"golang.org/x/net/context"
+
 	"github.com/ant0ine/go-json-rest/rest/test"
 )
 
@@ -15,10 +17,10 @@ func TestJsonpMiddleware(t *testing.T) {
 
 	// router app with success and error paths
 	router, err := MakeRouter(
-		Get("/ok", func(w ResponseWriter, r *Request) {
+		Get("/ok", func(ctx context.Context, w ResponseWriter, r *Request) {
 			w.WriteJson(map[string]string{"Id": "123"})
 		}),
-		Get("/error", func(w ResponseWriter, r *Request) {
+		Get("/error", func(ctx context.Context, w ResponseWriter, r *Request) {
 			Error(w, "jsonp error", 500)
 		}),
 	)

@@ -3,9 +3,11 @@ package rest
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"log"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestAccessLogJsonMiddleware(t *testing.T) {
@@ -21,7 +23,7 @@ func TestAccessLogJsonMiddleware(t *testing.T) {
 	api.Use(&RecorderMiddleware{})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 

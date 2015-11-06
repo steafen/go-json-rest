@@ -1,8 +1,10 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestIfMiddleware(t *testing.T) {
@@ -18,21 +20,21 @@ func TestIfMiddleware(t *testing.T) {
 			return false
 		},
 		IfTrue: MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
-			return func(w ResponseWriter, r *Request) {
+			return func(ctx context.Context, w ResponseWriter, r *Request) {
 				r.Env["TRUE_MIDDLEWARE"] = true
-				handler(w, r)
+				handler(ctx, w, r)
 			}
 		}),
 		IfFalse: MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
-			return func(w ResponseWriter, r *Request) {
+			return func(ctx context.Context, w ResponseWriter, r *Request) {
 				r.Env["FALSE_MIDDLEWARE"] = true
-				handler(w, r)
+				handler(ctx, w, r)
 			}
 		}),
 	})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(r.Env)
 	}))
 

@@ -1,10 +1,12 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"io/ioutil"
 	"log"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestRecoverMiddleware(t *testing.T) {
@@ -19,7 +21,7 @@ func TestRecoverMiddleware(t *testing.T) {
 	})
 
 	// a simple app that fails
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		panic("test")
 	}))
 

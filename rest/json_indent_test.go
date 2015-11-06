@@ -1,8 +1,10 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestJsonIndentMiddleware(t *testing.T) {
@@ -13,7 +15,7 @@ func TestJsonIndentMiddleware(t *testing.T) {
 	api.Use(&JsonIndentMiddleware{})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 

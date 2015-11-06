@@ -1,8 +1,10 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"testing"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestApiNoAppNoMiddleware(t *testing.T) {
@@ -24,7 +26,7 @@ func TestApiNoAppNoMiddleware(t *testing.T) {
 func TestApiSimpleAppNoMiddleware(t *testing.T) {
 
 	api := NewApi()
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 
@@ -43,7 +45,7 @@ func TestDevStack(t *testing.T) {
 
 	api := NewApi()
 	api.Use(DefaultDevStack...)
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 
@@ -62,7 +64,7 @@ func TestProdStack(t *testing.T) {
 
 	api := NewApi()
 	api.Use(DefaultProdStack...)
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 
@@ -81,7 +83,7 @@ func TestCommonStack(t *testing.T) {
 
 	api := NewApi()
 	api.Use(DefaultCommonStack...)
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 

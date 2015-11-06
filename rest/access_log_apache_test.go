@@ -2,10 +2,13 @@ package rest
 
 import (
 	"bytes"
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"log"
 	"regexp"
 	"testing"
+
+	"golang.org/x/net/context"
+
+	"github.com/ant0ine/go-json-rest/rest/test"
 )
 
 func TestAccessLogApacheMiddleware(t *testing.T) {
@@ -23,7 +26,7 @@ func TestAccessLogApacheMiddleware(t *testing.T) {
 	api.Use(&RecorderMiddleware{})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 
@@ -57,7 +60,7 @@ func TestAccessLogApacheMiddlewareMissingData(t *testing.T) {
 	})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 

@@ -2,6 +2,8 @@ package rest
 
 import (
 	"testing"
+
+	"golang.org/x/net/context"
 )
 
 type testMiddleware struct {
@@ -9,13 +11,13 @@ type testMiddleware struct {
 }
 
 func (mw *testMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 		if r.Env["BEFORE"] == nil {
 			r.Env["BEFORE"] = mw.name
 		} else {
 			r.Env["BEFORE"] = r.Env["BEFORE"].(string) + mw.name
 		}
-		handler(w, r)
+		handler(ctx, w, r)
 		if r.Env["AFTER"] == nil {
 			r.Env["AFTER"] = mw.name
 		} else {
@@ -30,12 +32,13 @@ func TestWrapMiddlewares(t *testing.T) {
 	b := &testMiddleware{"B"}
 	c := &testMiddleware{"C"}
 
-	app := func(w ResponseWriter, r *Request) {
+	app := func(ctx context.Context, w ResponseWriter, r *Request) {
 		// do nothing
 	}
 
 	handlerFunc := WrapMiddlewares([]Middleware{a, b, c}, app)
 
+	ctx := context.Background()
 	// fake request
 	r := &Request{
 		nil,
@@ -43,7 +46,7 @@ func TestWrapMiddlewares(t *testing.T) {
 		map[string]interface{}{},
 	}
 
-	handlerFunc(nil, r)
+	handlerFunc(ctx, nil, r)
 
 	before := r.Env["BEFORE"].(string)
 	if before != "ABC" {
