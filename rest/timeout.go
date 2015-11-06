@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"net/http"
 	"time"
 
 	"golang.org/x/net/context"
@@ -21,20 +20,6 @@ func Timeout(timeout time.Duration) *TimeoutMiddleware {
 func (mw *TimeoutMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 	return func(ctx context.Context, w ResponseWriter, r *Request) {
 		ctx, _ = context.WithTimeout(ctx, mw.timeout)
-		h(ctx, w, r)
-		// Cancel the context if the client closes the connection
-		if wcn, ok := w.(http.CloseNotifier); ok {
-			var cancel context.CancelFunc
-			ctx, cancel = context.WithCancel(ctx)
-			defer cancel()
-
-			notify := wcn.CloseNotify()
-			go func() {
-				<-notify
-				cancel()
-			}()
-		}
-
 		h(ctx, w, r)
 	}
 }
