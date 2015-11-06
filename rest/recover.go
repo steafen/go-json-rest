@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
+
+	"golang.org/x/net/context"
 )
 
 // RecoverMiddleware catches the panic errors that occur in the wrapped HandleFunc,
@@ -33,7 +35,7 @@ func (mw *RecoverMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		mw.Logger = log.New(os.Stderr, "", 0)
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		// catch user code's panic, and convert to http response
 		defer func() {
@@ -54,7 +56,7 @@ func (mw *RecoverMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		}()
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 	}
 }
 

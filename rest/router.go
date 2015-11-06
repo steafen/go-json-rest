@@ -2,10 +2,12 @@ package rest
 
 import (
 	"errors"
-	"github.com/ant0ine/go-json-rest/rest/trie"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/ant0ine/go-json-rest/rest/trie"
+	"golang.org/x/net/context"
 )
 
 type router struct {
@@ -31,7 +33,7 @@ func MakeRouter(routes ...*Route) (App, error) {
 
 // Handle the REST routing and run the user code.
 func (rt *router) AppFunc() HandlerFunc {
-	return func(writer ResponseWriter, request *Request) {
+	return func(ctx context.Context, writer ResponseWriter, request *Request) {
 
 		// find the route
 		route, params, pathMatched := rt.findRouteFromURL(request.Method, request.URL)
@@ -53,7 +55,7 @@ func (rt *router) AppFunc() HandlerFunc {
 
 		// run the user code
 		handler := route.Func
-		handler(writer, request)
+		handler(ctx, writer, request)
 	}
 }
 

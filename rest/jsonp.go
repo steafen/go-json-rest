@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"net"
 	"net/http"
+
+	"golang.org/x/net/context"
 )
 
 // JsonpMiddleware provides JSONP responses on demand, based on the presence
@@ -23,7 +25,7 @@ func (mw *JsonpMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		mw.CallbackNameKey = "callback"
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		callbackName := r.URL.Query().Get(mw.CallbackNameKey)
 		// TODO validate the callbackName ?
@@ -32,10 +34,10 @@ func (mw *JsonpMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 			// the client request JSONP, instantiate JsonpMiddleware.
 			writer := &jsonpResponseWriter{w, false, callbackName}
 			// call the handler with the wrapped writer
-			h(writer, r)
+			h(ctx, writer, r)
 		} else {
 			// do nothing special
-			h(w, r)
+			h(ctx, w, r)
 		}
 
 	}

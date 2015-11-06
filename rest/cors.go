@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
 // Possible improvements:
@@ -72,7 +74,7 @@ func (mw *CorsMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 	}
 	mw.allowedHeadersCsv = strings.Join(normedHeaders, ",")
 
-	return func(writer ResponseWriter, request *Request) {
+	return func(ctx context.Context, writer ResponseWriter, request *Request) {
 
 		corsInfo := request.GetCorsInfo()
 
@@ -83,7 +85,7 @@ func (mw *CorsMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 				return
 			}
 			// continue, execute the wrapped middleware
-			handler(writer, request)
+			handler(ctx, writer, request)
 			return
 		}
 
@@ -129,7 +131,7 @@ func (mw *CorsMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 			writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		}
 		// continure, execute the wrapped middleware
-		handler(writer, request)
+		handler(ctx, writer, request)
 		return
 	}
 }

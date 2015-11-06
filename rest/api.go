@@ -2,6 +2,8 @@ package rest
 
 import (
 	"net/http"
+
+	"golang.org/x/net/context"
 )
 
 // Api defines a stack of Middlewares and an App.
@@ -37,7 +39,7 @@ func (api *Api) MakeHandler() http.Handler {
 	if api.app != nil {
 		appFunc = api.app.AppFunc()
 	} else {
-		appFunc = func(w ResponseWriter, r *Request) {}
+		appFunc = func(ctx context.Context, w ResponseWriter, r *Request) {}
 	}
 	return http.HandlerFunc(
 		adapterFunc(

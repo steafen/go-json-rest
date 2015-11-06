@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 // AccessLogJsonMiddleware produces the access log with records written as JSON. This middleware
@@ -25,10 +27,10 @@ func (mw *AccessLogJsonMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		mw.Logger = log.New(os.Stderr, "", 0)
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 
 		mw.Logger.Printf("%s", makeAccessLogJsonRecord(r).asJson())
 	}

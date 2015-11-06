@@ -1,5 +1,7 @@
 package rest
 
+import "golang.org/x/net/context"
+
 const xPoweredByDefault = "go-json-rest"
 
 // PoweredByMiddleware adds the "X-Powered-By" header to the HTTP response.
@@ -18,12 +20,12 @@ func (mw *PoweredByMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		poweredBy = mw.XPoweredBy
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		w.Header().Add("X-Powered-By", poweredBy)
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 
 	}
 }

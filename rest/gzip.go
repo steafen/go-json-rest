@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/http"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
 // GzipMiddleware is responsible for compressing the payload with gzip and setting the proper
@@ -16,13 +18,13 @@ type GzipMiddleware struct{}
 
 // MiddlewareFunc makes GzipMiddleware implement the Middleware interface.
 func (mw *GzipMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 		// gzip support enabled
 		canGzip := strings.Contains(r.Header.Get("Accept-Encoding"), "gzip")
 		// client accepts gzip ?
 		writer := &gzipResponseWriter{w, false, canGzip, nil}
 		// call the handler with the wrapped writer
-		h(writer, r)
+		h(ctx, writer, r)
 	}
 }
 

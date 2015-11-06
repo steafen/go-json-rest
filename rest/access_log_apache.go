@@ -8,6 +8,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 // TODO Future improvements:
@@ -81,10 +83,10 @@ func (mw *AccessLogApacheMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 
 	mw.convertFormat()
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 
 		util := &accessLogUtil{w, r}
 
