@@ -23,8 +23,9 @@ func (mw *RecorderMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		// call the handler
 		h(ctx, writer, r)
 
-		r.Env["STATUS_CODE"] = writer.statusCode
-		r.Env["BYTES_WRITTEN"] = writer.bytesWritten
+		env := EnvFromContext(ctx)
+		env["STATUS_CODE"] = writer.statusCode
+		env["BYTES_WRITTEN"] = writer.bytesWritten
 	}
 }
 

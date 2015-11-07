@@ -21,13 +21,15 @@ func TestIfMiddleware(t *testing.T) {
 		},
 		IfTrue: MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
 			return func(ctx context.Context, w ResponseWriter, r *Request) {
-				r.Env["TRUE_MIDDLEWARE"] = true
+				env := EnvFromContext(ctx)
+				env["TRUE_MIDDLEWARE"] = true
 				handler(ctx, w, r)
 			}
 		}),
 		IfFalse: MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
 			return func(ctx context.Context, w ResponseWriter, r *Request) {
-				r.Env["FALSE_MIDDLEWARE"] = true
+				env := EnvFromContext(ctx)
+				env["FALSE_MIDDLEWARE"] = true
 				handler(ctx, w, r)
 			}
 		}),
@@ -35,7 +37,7 @@ func TestIfMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(r.Env)
+		w.WriteJson(EnvFromContext(ctx))
 	}))
 
 	// wrap all

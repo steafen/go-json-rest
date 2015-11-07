@@ -172,8 +172,9 @@ type accessLogUtil struct {
 
 // As stored by the auth middlewares.
 func (u *accessLogUtil) RemoteUser() string {
-	if u.R.Env["REMOTE_USER"] != nil {
-		return u.R.Env["REMOTE_USER"].(string)
+	env := EnvFromContext(u.ctx)
+	if env["REMOTE_USER"] != nil {
+		return env["REMOTE_USER"].(string)
 	}
 	return ""
 }
@@ -188,8 +189,9 @@ func (u *accessLogUtil) ApacheQueryString() string {
 
 // When the request entered the timer middleware.
 func (u *accessLogUtil) StartTime() *time.Time {
-	if u.R.Env["START_TIME"] != nil {
-		return u.R.Env["START_TIME"].(*time.Time)
+	env := EnvFromContext(u.ctx)
+	if env["START_TIME"] != nil {
+		return env["START_TIME"].(*time.Time)
 	}
 	return nil
 }
@@ -206,16 +208,18 @@ func (u *accessLogUtil) ApacheRemoteAddr() string {
 
 // As recorded by the recorder middleware.
 func (u *accessLogUtil) StatusCode() int {
-	if u.R.Env["STATUS_CODE"] != nil {
-		return u.R.Env["STATUS_CODE"].(int)
+	env := EnvFromContext(u.ctx)
+	if env["STATUS_CODE"] != nil {
+		return env["STATUS_CODE"].(int)
 	}
 	return 0
 }
 
 // As mesured by the timer middleware.
 func (u *accessLogUtil) ResponseTime() *time.Duration {
-	if u.R.Env["ELAPSED_TIME"] != nil {
-		return u.R.Env["ELAPSED_TIME"].(*time.Duration)
+	env := EnvFromContext(u.ctx)
+	if env["ELAPSED_TIME"] != nil {
+		return env["ELAPSED_TIME"].(*time.Duration)
 	}
 	return nil
 }
@@ -227,8 +231,9 @@ func (u *accessLogUtil) Pid() int {
 
 // As recorded by the recorder middleware.
 func (u *accessLogUtil) BytesWritten() int64 {
-	if u.R.Env["BYTES_WRITTEN"] != nil {
-		return u.R.Env["BYTES_WRITTEN"].(int64)
+	env := EnvFromContext(u.ctx)
+	if env["BYTES_WRITTEN"] != nil {
+		return env["BYTES_WRITTEN"].(int64)
 	}
 	return 0
 }

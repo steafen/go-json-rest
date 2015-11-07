@@ -32,7 +32,7 @@ func (mw *AccessLogJsonMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		// call the handler
 		h(ctx, w, r)
 
-		mw.Logger.Printf("%s", makeAccessLogJsonRecord(r).asJson())
+		mw.Logger.Printf("%s", makeAccessLogJsonRecord(ctx, r).asJson())
 	}
 }
 
@@ -48,26 +48,26 @@ type AccessLogJsonRecord struct {
 	UserAgent    string
 }
 
-func makeAccessLogJsonRecord(r *Request) *AccessLogJsonRecord {
-
+func makeAccessLogJsonRecord(ctx context.Context, r *Request) *AccessLogJsonRecord {
+	env := EnvFromContext(ctx)
 	var timestamp *time.Time
-	if r.Env["START_TIME"] != nil {
-		timestamp = r.Env["START_TIME"].(*time.Time)
+	if env["START_TIME"] != nil {
+		timestamp = env["START_TIME"].(*time.Time)
 	}
 
 	var statusCode int
-	if r.Env["STATUS_CODE"] != nil {
-		statusCode = r.Env["STATUS_CODE"].(int)
+	if env["STATUS_CODE"] != nil {
+		statusCode = env["STATUS_CODE"].(int)
 	}
 
 	var responseTime *time.Duration
-	if r.Env["ELAPSED_TIME"] != nil {
-		responseTime = r.Env["ELAPSED_TIME"].(*time.Duration)
+	if env["ELAPSED_TIME"] != nil {
+		responseTime = env["ELAPSED_TIME"].(*time.Duration)
 	}
 
 	var remoteUser string
-	if r.Env["REMOTE_USER"] != nil {
-		remoteUser = r.Env["REMOTE_USER"].(string)
+	if env["REMOTE_USER"] != nil {
+		remoteUser = env["REMOTE_USER"].(string)
 	}
 
 	return &AccessLogJsonRecord{

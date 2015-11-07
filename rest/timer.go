@@ -16,13 +16,14 @@ func (mw *TimerMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		start := time.Now()
-		r.Env["START_TIME"] = &start
+		env := EnvFromContext(ctx)
+		env["START_TIME"] = &start
 
 		// call the handler
 		h(ctx, w, r)
 
 		end := time.Now()
 		elapsed := end.Sub(start)
-		r.Env["ELAPSED_TIME"] = &elapsed
+		env["ELAPSED_TIME"] = &elapsed
 	}
 }

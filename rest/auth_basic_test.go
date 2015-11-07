@@ -60,10 +60,11 @@ func TestAuthBasic(t *testing.T) {
 	apiSuccess := NewApi()
 	apiSuccess.Use(authMiddleware)
 	apiSuccess.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		if r.Env["REMOTE_USER"] == nil {
+		env := EnvFromContext(ctx)
+		if env["REMOTE_USER"] == nil {
 			t.Error("REMOTE_USER is nil")
 		}
-		user := r.Env["REMOTE_USER"].(string)
+		user := env["REMOTE_USER"].(string)
 		if user != "admin" {
 			t.Error("REMOTE_USER is expected to be 'admin'")
 		}

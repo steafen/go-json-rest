@@ -17,9 +17,6 @@ var (
 // Request inherits from http.Request, and provides additional methods.
 type Request struct {
 	*http.Request
-
-	// Environment used by middlewares to communicate.
-	Env map[string]interface{}
 }
 
 // DecodeJsonPayload reads the request body and decodes the JSON using json.Unmarshal.

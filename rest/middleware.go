@@ -56,12 +56,11 @@ func adapterFunc(handler HandlerFunc) http.HandlerFunc {
 
 	return func(origWriter http.ResponseWriter, origRequest *http.Request) {
 		// context
-		ctx := context.Background()
+		ctx := contextWithEnv()
 
 		// instantiate the rest objects
 		request := &Request{
 			origRequest,
-			map[string]interface{}{},
 		}
 
 		writer := &responseWriter{

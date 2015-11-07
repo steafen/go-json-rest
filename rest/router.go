@@ -51,7 +51,7 @@ func (rt *router) AppFunc() HandlerFunc {
 		}
 
 		// a route was found, set the PathParams
-		ctx = context.WithValue(ctx, pathParams, &params)
+		ctx = context.WithValue(ctx, ctxPathParams, &params)
 		// run the user code
 		handler := route.Func
 		handler(ctx, writer, request)

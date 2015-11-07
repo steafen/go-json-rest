@@ -33,18 +33,18 @@ func (mw *StatusMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 
 		// call the handler
 		h(ctx, w, r)
-
-		if r.Env["STATUS_CODE"] == nil {
+		env := EnvFromContext(ctx)
+		if env["STATUS_CODE"] == nil {
 			log.Fatal("StatusMiddleware: Env[\"STATUS_CODE\"] is nil, " +
 				"RecorderMiddleware may not be in the wrapped Middlewares.")
 		}
-		statusCode := r.Env["STATUS_CODE"].(int)
+		statusCode := env["STATUS_CODE"].(int)
 
-		if r.Env["ELAPSED_TIME"] == nil {
+		if env["ELAPSED_TIME"] == nil {
 			log.Fatal("StatusMiddleware: Env[\"ELAPSED_TIME\"] is nil, " +
 				"TimerMiddleware may not be in the wrapped Middlewares.")
 		}
-		responseTime := r.Env["ELAPSED_TIME"].(*time.Duration)
+		responseTime := env["ELAPSED_TIME"].(*time.Duration)
 
 		mw.lock.Lock()
 		mw.responseCounts[fmt.Sprintf("%d", statusCode)]++

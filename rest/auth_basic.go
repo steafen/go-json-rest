@@ -70,7 +70,8 @@ func (mw *AuthBasicMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 			return
 		}
 
-		request.Env["REMOTE_USER"] = providedUserId
+		env := EnvFromContext(ctx)
+		env["REMOTE_USER"] = providedUserId
 
 		handler(ctx, writer, request)
 	}

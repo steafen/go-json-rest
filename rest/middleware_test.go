@@ -12,16 +12,17 @@ type testMiddleware struct {
 
 func (mw *testMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 	return func(ctx context.Context, w ResponseWriter, r *Request) {
-		if r.Env["BEFORE"] == nil {
-			r.Env["BEFORE"] = mw.name
+		env := EnvFromContext(ctx)
+		if env["BEFORE"] == nil {
+			env["BEFORE"] = mw.name
 		} else {
-			r.Env["BEFORE"] = r.Env["BEFORE"].(string) + mw.name
+			env["BEFORE"] = env["BEFORE"].(string) + mw.name
 		}
 		handler(ctx, w, r)
-		if r.Env["AFTER"] == nil {
-			r.Env["AFTER"] = mw.name
+		if env["AFTER"] == nil {
+			env["AFTER"] = mw.name
 		} else {
-			r.Env["AFTER"] = r.Env["AFTER"].(string) + mw.name
+			env["AFTER"] = env["AFTER"].(string) + mw.name
 		}
 	}
 }
@@ -38,21 +39,19 @@ func TestWrapMiddlewares(t *testing.T) {
 
 	handlerFunc := WrapMiddlewares([]Middleware{a, b, c}, app)
 
-	ctx := context.Background()
+	ctx := contextWithEnv()
 	// fake request
-	r := &Request{
-		nil,
-		map[string]interface{}{},
-	}
+	r := &Request{}
 
 	handlerFunc(ctx, nil, r)
 
-	before := r.Env["BEFORE"].(string)
+	env := EnvFromContext(ctx)
+	before := env["BEFORE"].(string)
 	if before != "ABC" {
 		t.Error("middleware executed in the wrong order, expected ABC")
 	}
 
-	after := r.Env["AFTER"].(string)
+	after := env["AFTER"].(string)
 	if after != "CBA" {
 		t.Error("middleware executed in the wrong order, expected CBA")
 	}

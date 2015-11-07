@@ -2,8 +2,21 @@ package rest
 
 import "golang.org/x/net/context"
 
-const pathParams = "PATH_PARAMS"
+const ctxPathParams = "PATH_PARAMS"
+const ctxEnv = "ENV"
+
+func contextWithEnv() context.Context {
+	return context.WithValue(
+		context.Background(),
+		ctxEnv,
+		&map[string]interface{}{},
+	)
+}
 
 func PathParamFromContext(ctx context.Context) map[string]string {
-	return *(ctx.Value(pathParams).(*map[string]string))
+	return *(ctx.Value(ctxPathParams).(*map[string]string))
+}
+
+func EnvFromContext(ctx context.Context) map[string]interface{} {
+	return *(ctx.Value(ctxEnv).(*map[string]interface{}))
 }
