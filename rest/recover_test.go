@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/ant0ine/go-json-rest/rest/test"
+	"github.com/AlexanderChen1989/go-json-rest/rest/test"
 	"golang.org/x/net/context"
 )
 

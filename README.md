@@ -3,7 +3,7 @@
 
 *A quick and easy way to setup a RESTful JSON API*
 
-[![godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/ant0ine/go-json-rest/rest) [![license](https://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/ant0ine/go-json-rest/master/LICENSE) [![build](https://img.shields.io/travis/ant0ine/go-json-rest.svg?style=flat)](https://travis-ci.org/ant0ine/go-json-rest)
+[![godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/AlexanderChen1989/rest) [![license](https://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/ant0ine/go-json-rest/master/LICENSE) [![build](https://img.shields.io/travis/ant0ine/go-json-rest.svg?style=flat)](https://travis-ci.org/ant0ine/go-json-rest)
 
 
 **Go-Json-Rest** is a thin layer on top of `net/http` that helps building RESTful JSON APIs easily. It provides fast and scalable request routing using a Trie based implementation, helpers to deal with JSON requests and responses, and middlewares for functionalities like CORS, Auth, Gzip, Status ...
@@ -63,7 +63,7 @@
 
 This package is "go-gettable", just do:
 
-    go get github.com/ant0ine/go-json-rest/rest
+    go get github.com/AlexanderChen1989/rest
 
 
 ## Vendoring
@@ -128,7 +128,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -160,7 +160,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net"
 	"net/http"
@@ -216,7 +216,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 	"sync"
@@ -333,7 +333,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 	"sync"
@@ -468,7 +468,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -519,7 +519,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -657,7 +657,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -723,7 +723,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -757,7 +757,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -821,7 +821,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -864,7 +864,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -946,7 +946,7 @@ import (
 	"time"
 
 	"github.com/StephanDollberg/go-json-rest-middleware-jwt"
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 )
 
 func handle_auth(w rest.ResponseWriter, r *rest.Request) {
@@ -1015,7 +1015,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 	"time"
@@ -1085,7 +1085,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -1131,7 +1131,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"github.com/coreos/go-semver/semver"
 	"log"
 	"net/http"
@@ -1246,7 +1246,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest-middleware-statsd"
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 	"time"
@@ -1282,7 +1282,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"github.com/yvasiyarov/go-metrics"
 	"github.com/yvasiyarov/gorelic"
 	"log"
@@ -1351,7 +1351,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"github.com/stretchr/graceful"
 	"log"
 	"net/http"
@@ -1413,7 +1413,7 @@ code:
 package main
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"github.com/shykes/spdy-go"
 	"log"
 )
@@ -1461,7 +1461,7 @@ Setup:
  * cd gae/
  * mkdir -p github.com/ant0ine
  * cp -r $GOPATH/src/github.com/ant0ine/go-json-rest github.com/ant0ine/go-json-rest
- * rm -rf github.com/ant0ine/go-json-rest/examples/
+ * rm -rf github.com/AlexanderChen1989/examples/
  * path/to/google_appengine/dev_appserver.py .
 
 curl demo:
@@ -1474,7 +1474,7 @@ code:
 package gaehelloworld
 
 import (
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"log"
 	"net/http"
 )
@@ -1528,7 +1528,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/AlexanderChen1989/rest"
 	"golang.org/x/net/websocket"
 )
 
@@ -1558,7 +1558,7 @@ func main() {
 
 ## External Documentation
 
-- [Online Documentation (godoc.org)](https://godoc.org/github.com/ant0ine/go-json-rest/rest)
+- [Online Documentation (godoc.org)](https://godoc.org/github.com/AlexanderChen1989/rest)
 
 Old v1 blog posts:
 
@@ -1592,7 +1592,7 @@ http.ListenAndServe(":8080", api.MakeHandler())
 
 V3 is about deprecating the ResourceHandler in favor of a new API that exposes the Middlewares. As a consequence, all the Middlewares are now public, and the new Api object helps putting them together as a stack. Some default stack configurations are offered. The router is now an App that sits on top of the stack of Middlewares. Which means that the router is no longer required to use Go-Json-Rest.
 
-*Design ideas and discussion [See here](https://github.com/ant0ine/go-json-rest/issues/110)*
+*Design ideas and discussion [See here](https://github.com/AlexanderChen1989/issues/110)*
 
 
 ## Migration guide from v2 to v3
@@ -1640,7 +1640,7 @@ In fact the internal code of **go-json-rest** is itself implemented with Middlew
 **Go-Json-Rest** follows [Semver](http://semver.org/) and a few breaking changes have been introduced with the v2.
 
 
-#### The import path has changed to `github.com/ant0ine/go-json-rest/rest`
+#### The import path has changed to `github.com/AlexanderChen1989/rest`
 
 This is more conform to Go style, and makes [goimports](https://godoc.org/code.google.com/p/go.tools/cmd/goimports) work.
 
@@ -1653,7 +1653,7 @@ import (
 has to be changed to this:
 ``` go
 import (
-        "github.com/ant0ine/go-json-rest/rest"
+        "github.com/AlexanderChen1989/rest"
 )
 ```
 
@@ -1758,7 +1758,6 @@ Overall, they provide the same features, but with two methods instead of three, 
 
 Copyright (c) 2013-2015 Antoine Imbert
 
-[MIT License](https://github.com/ant0ine/go-json-rest/blob/master/LICENSE)
+[MIT License](https://github.com/AlexanderChen1989/blob/master/LICENSE)
 
 [![Analytics](https://ga-beacon.appspot.com/UA-309210-4/go-json-rest/master/readme)](https://github.com/igrigorik/ga-beacon)
-
