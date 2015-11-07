@@ -128,12 +128,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
@@ -165,12 +161,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net"
 	"net/http"
@@ -226,12 +218,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 	"sync"
@@ -348,12 +336,8 @@ package main
 
 import (
 	"fmt"
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 	"sync"
@@ -488,12 +472,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
@@ -544,12 +524,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -687,12 +663,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
@@ -758,12 +730,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
@@ -797,12 +765,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
@@ -866,12 +830,8 @@ code:
 package main
 
 import (
-<<<<<<< HEAD
-	"github.com/ant0ine/go-json-rest/rest"
   "golang.org/x/net/context"
-=======
 	"github.com/AlexanderChen1989/rest"
->>>>>>> alex_dev
 	"log"
 	"net/http"
 )
