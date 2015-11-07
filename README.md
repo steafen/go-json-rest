@@ -129,6 +129,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -136,7 +137,7 @@ import (
 func main() {
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
-	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) {
+	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 		w.WriteJson(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
@@ -161,6 +162,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net"
 	"net/http"
@@ -174,7 +176,7 @@ func main() {
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
-		rest.Get("/lookup/#host", func(w rest.ResponseWriter, req *rest.Request) {
+		rest.Get("/lookup/#host", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 			ip, err := net.LookupIP(req.PathParam("host"))
 			if err != nil {
 				rest.Error(w, err.Error(), http.StatusInternalServerError)
@@ -217,6 +219,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 	"sync"
@@ -247,7 +250,7 @@ var store = map[string]*Country{}
 
 var lock = sync.RWMutex{}
 
-func GetCountry(w rest.ResponseWriter, r *rest.Request) {
+func GetCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	code := r.PathParam("code")
 
 	lock.RLock()
@@ -265,7 +268,7 @@ func GetCountry(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(country)
 }
 
-func GetAllCountries(w rest.ResponseWriter, r *rest.Request) {
+func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	lock.RLock()
 	countries := make([]Country, len(store))
 	i := 0
@@ -277,7 +280,7 @@ func GetAllCountries(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&countries)
 }
 
-func PostCountry(w rest.ResponseWriter, r *rest.Request) {
+func PostCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	country := Country{}
 	err := r.DecodeJsonPayload(&country)
 	if err != nil {
@@ -298,7 +301,7 @@ func PostCountry(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&country)
 }
 
-func DeleteCountry(w rest.ResponseWriter, r *rest.Request) {
+func DeleteCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	code := r.PathParam("code")
 	lock.Lock()
 	delete(store, code)
@@ -334,6 +337,7 @@ package main
 import (
 	"fmt"
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 	"sync"
@@ -371,7 +375,7 @@ type Users struct {
 	Store map[string]*User
 }
 
-func (u *Users) GetAllUsers(w rest.ResponseWriter, r *rest.Request) {
+func (u *Users) GetAllUsers(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	u.RLock()
 	users := make([]User, len(u.Store))
 	i := 0
@@ -383,7 +387,7 @@ func (u *Users) GetAllUsers(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&users)
 }
 
-func (u *Users) GetUser(w rest.ResponseWriter, r *rest.Request) {
+func (u *Users) GetUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	u.RLock()
 	var user *User
@@ -399,7 +403,7 @@ func (u *Users) GetUser(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(user)
 }
 
-func (u *Users) PostUser(w rest.ResponseWriter, r *rest.Request) {
+func (u *Users) PostUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	user := User{}
 	err := r.DecodeJsonPayload(&user)
 	if err != nil {
@@ -414,7 +418,7 @@ func (u *Users) PostUser(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&user)
 }
 
-func (u *Users) PutUser(w rest.ResponseWriter, r *rest.Request) {
+func (u *Users) PutUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	u.Lock()
 	if u.Store[id] == nil {
@@ -435,7 +439,7 @@ func (u *Users) PutUser(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&user)
 }
 
-func (u *Users) DeleteUser(w rest.ResponseWriter, r *rest.Request) {
+func (u *Users) DeleteUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	u.Lock()
 	delete(u.Store, id)
@@ -469,6 +473,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -478,7 +483,7 @@ func main() {
 	api.Use(rest.DefaultDevStack...)
 
 	router, err := rest.MakeRouter(
-		rest.Get("/message", func(w rest.ResponseWriter, req *rest.Request) {
+		rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 			w.WriteJson(map[string]string{"Body": "Hello World!"})
 		}),
 	)
@@ -520,6 +525,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
@@ -574,13 +580,13 @@ func (i *Impl) InitSchema() {
 	i.DB.AutoMigrate(&Reminder{})
 }
 
-func (i *Impl) GetAllReminders(w rest.ResponseWriter, r *rest.Request) {
+func (i *Impl) GetAllReminders(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	reminders := []Reminder{}
 	i.DB.Find(&reminders)
 	w.WriteJson(&reminders)
 }
 
-func (i *Impl) GetReminder(w rest.ResponseWriter, r *rest.Request) {
+func (i *Impl) GetReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	reminder := Reminder{}
 	if i.DB.First(&reminder, id).Error != nil {
@@ -590,7 +596,7 @@ func (i *Impl) GetReminder(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&reminder)
 }
 
-func (i *Impl) PostReminder(w rest.ResponseWriter, r *rest.Request) {
+func (i *Impl) PostReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	reminder := Reminder{}
 	if err := r.DecodeJsonPayload(&reminder); err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
@@ -603,7 +609,7 @@ func (i *Impl) PostReminder(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&reminder)
 }
 
-func (i *Impl) PutReminder(w rest.ResponseWriter, r *rest.Request) {
+func (i *Impl) PutReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 
 	id := r.PathParam("id")
 	reminder := Reminder{}
@@ -627,7 +633,7 @@ func (i *Impl) PutReminder(w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(&reminder)
 }
 
-func (i *Impl) DeleteReminder(w rest.ResponseWriter, r *rest.Request) {
+func (i *Impl) DeleteReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	reminder := Reminder{}
 	if i.DB.First(&reminder, id).Error != nil {
@@ -658,6 +664,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -691,7 +698,7 @@ type Country struct {
 	Name string
 }
 
-func GetAllCountries(w rest.ResponseWriter, r *rest.Request) {
+func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(
 		[]Country{
 			Country{
@@ -724,6 +731,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -734,7 +742,7 @@ func main() {
 	api.Use(&rest.JsonpMiddleware{
 		CallbackNameKey: "cb",
 	})
-	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) {
+	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 		w.WriteJson(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
@@ -758,6 +766,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -774,7 +783,7 @@ func main() {
 			return false
 		},
 	})
-	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) {
+	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 		w.WriteJson(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
@@ -822,6 +831,7 @@ package main
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
+  "golang.org/x/net/context"
 	"log"
 	"net/http"
 )
@@ -832,7 +842,7 @@ func main() {
 	api.Use(statusMw)
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
-		rest.Get("/.status", func(w rest.ResponseWriter, r *rest.Request) {
+		rest.Get("/.status", func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 			w.WriteJson(statusMw.GetStatus())
 		}),
 	)
@@ -886,7 +896,7 @@ func main() {
 	router, err := rest.MakeRouter(
 		rest.Get("/countries", GetAllCountries),
 		rest.Get("/.status", auth.MiddlewareFunc(
-			func(w rest.ResponseWriter, r *rest.Request) {
+			func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 				w.WriteJson(statusMw.GetStatus())
 			},
 		)),
@@ -903,7 +913,7 @@ type Country struct {
 	Name string
 }
 
-func GetAllCountries(w rest.ResponseWriter, r *rest.Request) {
+func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(
 		[]Country{
 			Country{
@@ -949,7 +959,7 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 )
 
-func handle_auth(w rest.ResponseWriter, r *rest.Request) {
+func handle_auth(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	w.WriteJson(map[string]string{"authed": r.Env["REMOTE_USER"].(string)})
 }
 
@@ -1039,7 +1049,7 @@ type Thing struct {
 	Name string
 }
 
-func StreamThings(w rest.ResponseWriter, r *rest.Request) {
+func StreamThings(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	cpt := 0
 	for {
 		cpt++
@@ -1094,7 +1104,7 @@ func main() {
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
-		rest.Get("/message.txt", func(w rest.ResponseWriter, req *rest.Request) {
+		rest.Get("/message.txt", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 			w.Header().Set("Content-Type", "text/plain")
 			w.(http.ResponseWriter).Write([]byte("Hello World!"))
 		}),
@@ -1199,7 +1209,7 @@ func main() {
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/#version/message", svmw.MiddlewareFunc(
-			func(w rest.ResponseWriter, req *rest.Request) {
+			func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 				version := req.Env["VERSION"].(*semver.Version)
 				if version.Major == 2 {
 					// http://en.wikipedia.org/wiki/Second-system_effect
@@ -1256,7 +1266,7 @@ func main() {
 	api := rest.NewApi()
 	api.Use(&statsd.StatsdMiddleware{})
 	api.Use(rest.DefaultDevStack...)
-	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, req *rest.Request) {
+	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 
 		// take more than 1ms so statsd can report it
 		time.Sleep(100 * time.Millisecond)
@@ -1325,7 +1335,7 @@ func main() {
 		Name:    "<REPLACE WITH THE APP NAME>",
 		Verbose: true,
 	})
-	api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) {
+	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 		w.WriteJson(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
@@ -1362,7 +1372,7 @@ func main() {
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
-		rest.Get("/message", func(w rest.ResponseWriter, req *rest.Request) {
+		rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 			for cpt := 1; cpt <= 10; cpt++ {
 
 				// wait 1 second
@@ -1423,7 +1433,7 @@ type User struct {
 	Name string
 }
 
-func GetUser(w rest.ResponseWriter, req *rest.Request) {
+func GetUser(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 	user := User{
 		Id:   req.PathParam("id"),
 		Name: "Antoine",
@@ -1483,7 +1493,7 @@ func init() {
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
-		&rest.Get("/message", func(w rest.ResponseWriter, req *rest.Request) {
+		&rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 			w.WriteJson(map[string]string{"Body": "Hello World!"})
 		}),
 	)
@@ -1538,7 +1548,7 @@ func main() {
 	})
 
 	router, err := rest.MakeRouter(
-		rest.Get("/ws", func(w rest.ResponseWriter, r *rest.Request) {
+		rest.Get("/ws", func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 			wsHandler.ServeHTTP(w.(http.ResponseWriter), r.Request)
 		}),
 	)
@@ -1580,7 +1590,7 @@ Old v1 blog posts:
 ```go
 api := rest.NewApi()
 api.Use(rest.DefaultDevStack...)
-api.SetApp(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) {
+api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
         w.WriteJson(map[string]string{"Body": "Hello World!"})
 }))
 http.ListenAndServe(":8080", api.MakeHandler())
@@ -1671,7 +1681,7 @@ func (w *rest.ResponseWriter, req *rest.Request) {
 ```
 has to be changed to this:
 ``` go
-func (w rest.ResponseWriter, req *rest.Request) {
+func (ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
         ...
 }
 ```
@@ -1761,4 +1771,3 @@ Copyright (c) 2013-2015 Antoine Imbert
 [MIT License](https://github.com/ant0ine/go-json-rest/blob/master/LICENSE)
 
 [![Analytics](https://ga-beacon.appspot.com/UA-309210-4/go-json-rest/master/readme)](https://github.com/igrigorik/ga-beacon)
-
