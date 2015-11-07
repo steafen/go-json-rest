@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+
+	"golang.org/x/net/context"
 )
 
 // JsonIndentMiddleware provides JSON encoding with indentation.
@@ -28,11 +30,11 @@ func (mw *JsonIndentMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc 
 		mw.Indent = "  "
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		writer := &jsonIndentResponseWriter{w, false, mw.Prefix, mw.Indent}
 		// call the wrapped handler
-		handler(writer, r)
+		handler(ctx, writer, r)
 	}
 }
 

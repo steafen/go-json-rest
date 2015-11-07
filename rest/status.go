@@ -6,6 +6,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 // StatusMiddleware keeps track of various stats about the processed requests.
@@ -27,10 +29,10 @@ func (mw *StatusMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 	mw.responseCounts = map[string]int{}
 	mw.totalResponseTime = time.Time{}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 
 		if r.Env["STATUS_CODE"] == nil {
 			log.Fatal("StatusMiddleware: Env[\"STATUS_CODE\"] is nil, " +

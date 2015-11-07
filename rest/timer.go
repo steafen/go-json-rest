@@ -2,6 +2,8 @@ package rest
 
 import (
 	"time"
+
+	"golang.org/x/net/context"
 )
 
 // TimerMiddleware computes the elapsed time spent during the execution of the wrapped handler.
@@ -11,13 +13,13 @@ type TimerMiddleware struct{}
 
 // MiddlewareFunc makes TimerMiddleware implement the Middleware interface.
 func (mw *TimerMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		start := time.Now()
 		r.Env["START_TIME"] = &start
 
 		// call the handler
-		h(w, r)
+		h(ctx, w, r)
 
 		end := time.Now()
 		elapsed := end.Sub(start)

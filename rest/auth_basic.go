@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
 // AuthBasicMiddleware provides a simple AuthBasic implementation. On failure, a 401 HTTP response
@@ -43,7 +45,7 @@ func (mw *AuthBasicMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 		}
 	}
 
-	return func(writer ResponseWriter, request *Request) {
+	return func(ctx context.Context, writer ResponseWriter, request *Request) {
 
 		authHeader := request.Header.Get("Authorization")
 		if authHeader == "" {
@@ -70,7 +72,7 @@ func (mw *AuthBasicMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 
 		request.Env["REMOTE_USER"] = providedUserId
 
-		handler(writer, request)
+		handler(ctx, writer, request)
 	}
 }
 

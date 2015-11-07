@@ -2,8 +2,10 @@ package rest
 
 import (
 	"encoding/base64"
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"testing"
+
+	"github.com/AlexanderChen1989/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestAuthBasic(t *testing.T) {
@@ -28,7 +30,7 @@ func TestAuthBasic(t *testing.T) {
 	// api for testing failure
 	apiFailure := NewApi()
 	apiFailure.Use(authMiddleware)
-	apiFailure.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	apiFailure.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		t.Error("Should never be executed")
 	}))
 	handler := apiFailure.MakeHandler()
@@ -57,7 +59,7 @@ func TestAuthBasic(t *testing.T) {
 	// api for testing success
 	apiSuccess := NewApi()
 	apiSuccess.Use(authMiddleware)
-	apiSuccess.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	apiSuccess.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		if r.Env["REMOTE_USER"] == nil {
 			t.Error("REMOTE_USER is nil")
 		}

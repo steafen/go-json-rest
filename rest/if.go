@@ -2,6 +2,8 @@ package rest
 
 import (
 	"log"
+
+	"golang.org/x/net/context"
 )
 
 // IfMiddleware evaluates at runtime a condition based on the current request, and decides to
@@ -41,12 +43,12 @@ func (mw *IfMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		ifFalseHandler = h
 	}
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		if mw.Condition(r) {
-			ifTrueHandler(w, r)
+			ifTrueHandler(ctx, w, r)
 		} else {
-			ifFalseHandler(w, r)
+			ifFalseHandler(ctx, w, r)
 		}
 
 	}

@@ -1,8 +1,10 @@
 package rest
 
 import (
-	"github.com/ant0ine/go-json-rest/rest/test"
 	"testing"
+
+	"github.com/AlexanderChen1989/go-json-rest/rest/test"
+	"golang.org/x/net/context"
 )
 
 func TestRecorderMiddleware(t *testing.T) {
@@ -11,9 +13,9 @@ func TestRecorderMiddleware(t *testing.T) {
 
 	// a middleware carrying the Env tests
 	api.Use(MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
-		return func(w ResponseWriter, r *Request) {
+		return func(ctx context.Context, w ResponseWriter, r *Request) {
 
-			handler(w, r)
+			handler(ctx, w, r)
 
 			if r.Env["STATUS_CODE"] == nil {
 				t.Error("STATUS_CODE is nil")
@@ -38,7 +40,7 @@ func TestRecorderMiddleware(t *testing.T) {
 	api.Use(&RecorderMiddleware{})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 
@@ -58,9 +60,9 @@ func TestRecorderAndGzipMiddleware(t *testing.T) {
 
 	// a middleware carrying the Env tests
 	api.Use(MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
-		return func(w ResponseWriter, r *Request) {
+		return func(ctx context.Context, w ResponseWriter, r *Request) {
 
-			handler(w, r)
+			handler(ctx, w, r)
 
 			if r.Env["BYTES_WRITTEN"] == nil {
 				t.Error("BYTES_WRITTEN is nil")
@@ -78,7 +80,7 @@ func TestRecorderAndGzipMiddleware(t *testing.T) {
 	api.Use(&GzipMiddleware{})
 
 	// a simple app
-	api.SetApp(AppSimple(func(w ResponseWriter, r *Request) {
+	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		w.WriteJson(map[string]string{"Id": "123"})
 	}))
 

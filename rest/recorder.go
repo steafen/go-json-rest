@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"net"
 	"net/http"
+
+	"golang.org/x/net/context"
 )
 
 // RecorderMiddleware keeps a record of the HTTP status code of the response,
@@ -14,12 +16,12 @@ type RecorderMiddleware struct{}
 
 // MiddlewareFunc makes RecorderMiddleware implement the Middleware interface.
 func (mw *RecorderMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		writer := &recorderResponseWriter{w, 0, false, 0}
 
 		// call the handler
-		h(writer, r)
+		h(ctx, writer, r)
 
 		r.Env["STATUS_CODE"] = writer.statusCode
 		r.Env["BYTES_WRITTEN"] = writer.bytesWritten

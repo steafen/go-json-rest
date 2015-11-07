@@ -4,6 +4,8 @@ import (
 	"mime"
 	"net/http"
 	"strings"
+
+	"golang.org/x/net/context"
 )
 
 // ContentTypeCheckerMiddleware verifies the request Content-Type header and returns a
@@ -15,7 +17,7 @@ type ContentTypeCheckerMiddleware struct{}
 // MiddlewareFunc makes ContentTypeCheckerMiddleware implement the Middleware interface.
 func (mw *ContentTypeCheckerMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 
-	return func(w ResponseWriter, r *Request) {
+	return func(ctx context.Context, w ResponseWriter, r *Request) {
 
 		mediatype, params, _ := mime.ParseMediaType(r.Header.Get("Content-Type"))
 		charset, ok := params["charset"]
@@ -35,6 +37,6 @@ func (mw *ContentTypeCheckerMiddleware) MiddlewareFunc(handler HandlerFunc) Hand
 		}
 
 		// call the wrapped handler
-		handler(w, r)
+		handler(ctx, w, r)
 	}
 }
