@@ -18,7 +18,7 @@ func TestHandler(t *testing.T) {
 	}
 	handler.SetRoutes(
 		Get("/r/:id", func(ctx context.Context, w ResponseWriter, r *Request) {
-			id := r.PathParam("id")
+			id := PathParamFromContext(ctx)["id"]
 			w.WriteJson(map[string]string{"Id": id})
 		}),
 		Post("/r/:id", func(ctx context.Context, w ResponseWriter, r *Request) {

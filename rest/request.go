@@ -18,16 +18,8 @@ var (
 type Request struct {
 	*http.Request
 
-	// Map of parameters that have been matched in the URL Path.
-	PathParams map[string]string
-
 	// Environment used by middlewares to communicate.
 	Env map[string]interface{}
-}
-
-// PathParam provides a convenient access to the PathParams map.
-func (r *Request) PathParam(name string) string {
-	return r.PathParams[name]
 }
 
 // DecodeJsonPayload reads the request body and decodes the JSON using json.Unmarshal.

@@ -88,7 +88,7 @@ func (mw *AccessLogApacheMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		// call the handler
 		h(ctx, w, r)
 
-		util := &accessLogUtil{w, r}
+		util := &accessLogUtil{ctx, w, r}
 
 		mw.Logger.Print(mw.executeTextTemplate(util))
 	}
@@ -165,8 +165,9 @@ func (mw *AccessLogApacheMiddleware) executeTextTemplate(util *accessLogUtil) st
 // accessLogUtil provides a collection of utility functions that devrive data from the Request object.
 // This object is used to provide data to the Apache Style template and the the JSON log record.
 type accessLogUtil struct {
-	W ResponseWriter
-	R *Request
+	ctx context.Context
+	W   ResponseWriter
+	R   *Request
 }
 
 // As stored by the auth middlewares.

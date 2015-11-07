@@ -61,7 +61,6 @@ func adapterFunc(handler HandlerFunc) http.HandlerFunc {
 		// instantiate the rest objects
 		request := &Request{
 			origRequest,
-			nil,
 			map[string]interface{}{},
 		}
 

@@ -42,7 +42,6 @@ func TestWrapMiddlewares(t *testing.T) {
 	// fake request
 	r := &Request{
 		nil,
-		nil,
 		map[string]interface{}{},
 	}
 
