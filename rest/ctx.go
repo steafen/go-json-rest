@@ -13,10 +13,12 @@ func contextWithEnv() context.Context {
 	)
 }
 
+// PathParamFromContext fetch PathParam from context
 func PathParamFromContext(ctx context.Context) map[string]string {
 	return *(ctx.Value(ctxPathParams).(*map[string]string))
 }
 
+// EnvFromContext fetch Env from context
 func EnvFromContext(ctx context.Context) map[string]interface{} {
 	return *(ctx.Value(ctxEnv).(*map[string]interface{}))
 }

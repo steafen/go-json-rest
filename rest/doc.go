@@ -1,4 +1,4 @@
-// A quick and easy way to setup a RESTful JSON API
+// Package rest A quick and easy way to setup a RESTful JSON API
 //
 // http://ant0ine.github.io/go-json-rest/
 //
