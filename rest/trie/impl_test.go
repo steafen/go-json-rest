@@ -105,7 +105,7 @@ func TestDupeInsert(t *testing.T) {
 	if err == nil {
 		t.Error("Expected to not be nil")
 	}
-	if trie.root.Children["/"].HttpMethodToRoute["GET"] != "1" {
+	if trie.root.Children["/"].HTTPMethodToRoute["GET"] != "1" {
 		t.Error("Expected to be 1")
 	}
 }

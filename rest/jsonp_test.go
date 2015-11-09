@@ -8,17 +8,17 @@ import (
 	"github.com/AlexanderChen1989/go-json-rest/rest/test"
 )
 
-func TestJsonpMiddleware(t *testing.T) {
+func TestJSONpMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
-	api.Use(&JsonpMiddleware{})
+	api.Use(&JSONpMiddleware{})
 
 	// router app with success and error paths
 	router, err := MakeRouter(
 		Get("/ok", func(ctx context.Context, w ResponseWriter, r *Request) {
-			w.WriteJson(map[string]string{"Id": "123"})
+			w.WriteJSON(map[string]string{"Id": "123"})
 		}),
 		Get("/error", func(ctx context.Context, w ResponseWriter, r *Request) {
 			Error(w, "jsonp error", 500)

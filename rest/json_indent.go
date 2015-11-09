@@ -9,12 +9,12 @@ import (
 	"golang.org/x/net/context"
 )
 
-// JsonIndentMiddleware provides JSON encoding with indentation.
+// JSONIndentMiddleware provides JSON encoding with indentation.
 // It could be convenient to use it during development.
 // It works by "subclassing" the responseWriter provided by the wrapping middleware,
-// replacing the writer.EncodeJson and writer.WriteJson implementations,
+// replacing the writer.EncodeJSON and writer.WriteJSON implementations,
 // and making the parent implementations ignored.
-type JsonIndentMiddleware struct {
+type JSONIndentMiddleware struct {
 
 	// prefix string, as in json.MarshalIndent
 	Prefix string
@@ -23,8 +23,8 @@ type JsonIndentMiddleware struct {
 	Indent string
 }
 
-// MiddlewareFunc makes JsonIndentMiddleware implement the Middleware interface.
-func (mw *JsonIndentMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
+// MiddlewareFunc makes JSONIndentMiddleware implement the Middleware interface.
+func (mw *JSONIndentMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 
 	if mw.Indent == "" {
 		mw.Indent = "  "
@@ -52,8 +52,8 @@ type jsonIndentResponseWriter struct {
 	indent      string
 }
 
-// Replace the parent EncodeJson to provide indentation.
-func (w *jsonIndentResponseWriter) EncodeJson(v interface{}) ([]byte, error) {
+// Replace the parent EncodeJSON to provide indentation.
+func (w *jsonIndentResponseWriter) EncodeJSON(v interface{}) ([]byte, error) {
 	b, err := json.MarshalIndent(v, w.prefix, w.indent)
 	if err != nil {
 		return nil, err
@@ -61,10 +61,10 @@ func (w *jsonIndentResponseWriter) EncodeJson(v interface{}) ([]byte, error) {
 	return b, nil
 }
 
-// Make sure the local EncodeJson and local Write are called.
-// Does not call the parent WriteJson.
-func (w *jsonIndentResponseWriter) WriteJson(v interface{}) error {
-	b, err := w.EncodeJson(v)
+// Make sure the local EncodeJSON and local Write are called.
+// Does not call the parent WriteJSON.
+func (w *jsonIndentResponseWriter) WriteJSON(v interface{}) error {
+	b, err := w.EncodeJSON(v)
 	if err != nil {
 		return err
 	}

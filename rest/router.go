@@ -120,7 +120,7 @@ func (rt *router) start() error {
 
 		// insert in the Trie
 		err = rt.trie.AddRoute(
-			strings.ToUpper(route.HttpMethod), // work with the HttpMethod in uppercase
+			strings.ToUpper(route.HTTPMethod), // work with the HTTPMethod in uppercase
 			pathExp,
 			route,
 		)

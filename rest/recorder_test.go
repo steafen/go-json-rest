@@ -9,7 +9,7 @@ import (
 
 func TestRecorderMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// a middleware carrying the Env tests
 	api.Use(MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
@@ -41,7 +41,7 @@ func TestRecorderMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -50,13 +50,13 @@ func TestRecorderMiddleware(t *testing.T) {
 	req := test.MakeSimpleRequest("GET", "http://localhost/", nil)
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 }
 
 // See how many bytes are written when gzipping
 func TestRecorderAndGzipMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// a middleware carrying the Env tests
 	api.Use(MiddlewareSimple(func(handler HandlerFunc) HandlerFunc {
@@ -81,7 +81,7 @@ func TestRecorderAndGzipMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -91,5 +91,5 @@ func TestRecorderAndGzipMiddleware(t *testing.T) {
 	// "Accept-Encoding", "gzip" is set by test.MakeSimpleRequest
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 }

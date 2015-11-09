@@ -8,9 +8,9 @@ import (
 	"golang.org/x/net/context"
 )
 
-// JsonpMiddleware provides JSONP responses on demand, based on the presence
+// JSONpMiddleware provides JSONP responses on demand, based on the presence
 // of a query string argument specifying the callback name.
-type JsonpMiddleware struct {
+type JSONpMiddleware struct {
 
 	// Name of the query string parameter used to specify the
 	// the name of the JS callback used for the padding.
@@ -19,7 +19,7 @@ type JsonpMiddleware struct {
 }
 
 // MiddlewareFunc returns a HandlerFunc that implements the middleware.
-func (mw *JsonpMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
+func (mw *JSONpMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 
 	if mw.CallbackNameKey == "" {
 		mw.CallbackNameKey = "callback"
@@ -31,7 +31,7 @@ func (mw *JsonpMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		// TODO validate the callbackName ?
 
 		if callbackName != "" {
-			// the client request JSONP, instantiate JsonpMiddleware.
+			// the client request JSONP, instantiate JSONpMiddleware.
 			writer := &jsonpResponseWriter{w, false, callbackName}
 			// call the handler with the wrapped writer
 			h(ctx, writer, r)
@@ -67,8 +67,8 @@ func (w *jsonpResponseWriter) WriteHeader(code int) {
 }
 
 // Make sure the local Write is called.
-func (w *jsonpResponseWriter) WriteJson(v interface{}) error {
-	b, err := w.EncodeJson(v)
+func (w *jsonpResponseWriter) WriteJSON(v interface{}) error {
+	b, err := w.EncodeJSON(v)
 	if err != nil {
 		return err
 	}

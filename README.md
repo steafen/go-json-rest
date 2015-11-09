@@ -1,12 +1,12 @@
 
-# Go-Json-Rest
+# Go-JSON-Rest
 
 *A quick and easy way to setup a RESTful JSON API*
 
 [![godoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/AlexanderChen1989/rest) [![license](https://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/ant0ine/go-json-rest/master/LICENSE) [![build](https://img.shields.io/travis/ant0ine/go-json-rest.svg?style=flat)](https://travis-ci.org/ant0ine/go-json-rest)
 
 
-**Go-Json-Rest** is a thin layer on top of `net/http` that helps building RESTful JSON APIs easily. It provides fast and scalable request routing using a Trie based implementation, helpers to deal with JSON requests and responses, and middlewares for functionalities like CORS, Auth, Gzip, Status ...
+**Go-JSON-Rest** is a thin layer on top of `net/http` that helps building RESTful JSON APIs easily. It provides fast and scalable request routing using a Trie based implementation, helpers to deal with JSON requests and responses, and middlewares for functionalities like CORS, Auth, Gzip, Status ...
 
 
 ## Table of content
@@ -80,14 +80,14 @@ Core Middlewares:
 | Name | Description |
 |------|-------------|
 | **AccessLogApache** | Access log inspired by Apache mod_log_config |
-| **AccessLogJson** | Access log with records as JSON |
+| **AccessLogJSON** | Access log with records as JSON |
 | **AuthBasic** | Basic HTTP auth |
 | **ContentTypeChecker** | Verify the request content type |
 | **Cors** | CORS server side implementation |
 | **Gzip** | Compress the responses |
 | **If** | Conditionally execute a Middleware at runtime |
-| **JsonIndent** | Easy to read JSON |
-| **Jsonp** | Response as JSONP |
+| **JSONIndent** | Easy to read JSON |
+| **JSONp** | Response as JSONP |
 | **PoweredBy** | Manage the X-Powered-By response header |
 | **Recorder** | Record the status code and content length in the Env |
 | **Status** | Memecached inspired stats about the requests |
@@ -98,11 +98,11 @@ Third Party Middlewares:
 | Name | Description |
 |------|-------------|
 | **[Statsd](https://github.com/ant0ine/go-json-rest-middleware-statsd)** | Send stats to a statsd server |
-| **[JWT](https://github.com/StephanDollberg/go-json-rest-middleware-jwt)** | Provides authentication via Json Web Tokens |
+| **[JWT](https://github.com/StephanDollberg/go-json-rest-middleware-jwt)** | Provides authentication via JSON Web Tokens |
 | **[AuthToken](https://github.com/grayj/go-json-rest-middleware-tokenauth)** | Provides a Token Auth implementation |
 | **[SecureRedirect](https://github.com/clyphub/go-json-rest-middleware)** | Redirect clients from HTTP to HTTPS |
 
-*If you have a Go-Json-Rest compatible middleware, feel free to submit a PR to add it in this list, and in the examples.*
+*If you have a Go-JSON-Rest compatible middleware, feel free to submit a PR to add it in this list, and in the examples.*
 
 
 ## Examples
@@ -135,10 +135,10 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-		w.WriteJson(map[string]string{"Body": "Hello World!"})
+		w.WriteJSON(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
 }
@@ -173,7 +173,7 @@ type Message struct {
 }
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/lookup/#host", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
@@ -182,7 +182,7 @@ func main() {
 				rest.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			w.WriteJson(&ip)
+			w.WriteJSON(&ip)
 		}),
 	)
 	if err != nil {
@@ -226,7 +226,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/countries", GetAllCountries),
@@ -265,7 +265,7 @@ func GetCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 		rest.NotFound(w, r)
 		return
 	}
-	w.WriteJson(country)
+	w.WriteJSON(country)
 }
 
 func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -277,12 +277,12 @@ func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request
 		i++
 	}
 	lock.RUnlock()
-	w.WriteJson(&countries)
+	w.WriteJSON(&countries)
 }
 
 func PostCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	country := Country{}
-	err := r.DecodeJsonPayload(&country)
+	err := r.DecodeJSONPayload(&country)
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -298,7 +298,7 @@ func PostCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	lock.Lock()
 	store[country.Code] = &country
 	lock.Unlock()
-	w.WriteJson(&country)
+	w.WriteJSON(&country)
 }
 
 func DeleteCountry(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -349,7 +349,7 @@ func main() {
 		Store: map[string]*User{},
 	}
 
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/users", users.GetAllUsers),
@@ -384,7 +384,7 @@ func (u *Users) GetAllUsers(ctx context.Context, w rest.ResponseWriter, r *rest.
 		i++
 	}
 	u.RUnlock()
-	w.WriteJson(&users)
+	w.WriteJSON(&users)
 }
 
 func (u *Users) GetUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -400,12 +400,12 @@ func (u *Users) GetUser(ctx context.Context, w rest.ResponseWriter, r *rest.Requ
 		rest.NotFound(w, r)
 		return
 	}
-	w.WriteJson(user)
+	w.WriteJSON(user)
 }
 
 func (u *Users) PostUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	user := User{}
-	err := r.DecodeJsonPayload(&user)
+	err := r.DecodeJSONPayload(&user)
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -415,7 +415,7 @@ func (u *Users) PostUser(ctx context.Context, w rest.ResponseWriter, r *rest.Req
 	user.Id = id
 	u.Store[id] = &user
 	u.Unlock()
-	w.WriteJson(&user)
+	w.WriteJSON(&user)
 }
 
 func (u *Users) PutUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -427,7 +427,7 @@ func (u *Users) PutUser(ctx context.Context, w rest.ResponseWriter, r *rest.Requ
 		return
 	}
 	user := User{}
-	err := r.DecodeJsonPayload(&user)
+	err := r.DecodeJSONPayload(&user)
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		u.Unlock()
@@ -436,7 +436,7 @@ func (u *Users) PutUser(ctx context.Context, w rest.ResponseWriter, r *rest.Requ
 	user.Id = id
 	u.Store[id] = &user
 	u.Unlock()
-	w.WriteJson(&user)
+	w.WriteJSON(&user)
 }
 
 func (u *Users) DeleteUser(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -456,7 +456,7 @@ Common use cases, found in many applications.
 
 #### API and static files
 
-Combine Go-Json-Rest with other handlers.
+Combine Go-JSON-Rest with other handlers.
 
 `api.MakeHandler()` is a valid `http.Handler`, and can be combined with other handlers.
 In this example the api handler is used under the `/api/` prefix, while a FileServer is instantiated under the `/static/` prefix.
@@ -479,12 +479,12 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 
 	router, err := rest.MakeRouter(
 		rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
-			w.WriteJson(map[string]string{"Body": "Hello World!"})
+			w.WriteJSON(map[string]string{"Body": "Hello World!"})
 		}),
 	)
 	if err != nil {
@@ -539,7 +539,7 @@ func main() {
 	i.InitDB()
 	i.InitSchema()
 
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/reminders", i.GetAllReminders),
@@ -583,7 +583,7 @@ func (i *Impl) InitSchema() {
 func (i *Impl) GetAllReminders(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	reminders := []Reminder{}
 	i.DB.Find(&reminders)
-	w.WriteJson(&reminders)
+	w.WriteJSON(&reminders)
 }
 
 func (i *Impl) GetReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -593,12 +593,12 @@ func (i *Impl) GetReminder(ctx context.Context, w rest.ResponseWriter, r *rest.R
 		rest.NotFound(w, r)
 		return
 	}
-	w.WriteJson(&reminder)
+	w.WriteJSON(&reminder)
 }
 
 func (i *Impl) PostReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	reminder := Reminder{}
-	if err := r.DecodeJsonPayload(&reminder); err != nil {
+	if err := r.DecodeJSONPayload(&reminder); err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -606,7 +606,7 @@ func (i *Impl) PostReminder(ctx context.Context, w rest.ResponseWriter, r *rest.
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteJson(&reminder)
+	w.WriteJSON(&reminder)
 }
 
 func (i *Impl) PutReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -619,7 +619,7 @@ func (i *Impl) PutReminder(ctx context.Context, w rest.ResponseWriter, r *rest.R
 	}
 
 	updated := Reminder{}
-	if err := r.DecodeJsonPayload(&updated); err != nil {
+	if err := r.DecodeJSONPayload(&updated); err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -630,7 +630,7 @@ func (i *Impl) PutReminder(ctx context.Context, w rest.ResponseWriter, r *rest.R
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteJson(&reminder)
+	w.WriteJSON(&reminder)
 }
 
 func (i *Impl) DeleteReminder(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
@@ -670,7 +670,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	api.Use(&rest.CorsMiddleware{
 		RejectNonCorsRequests: false,
@@ -699,7 +699,7 @@ type Country struct {
 }
 
 func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-	w.WriteJson(
+	w.WriteJSON(
 		[]Country{
 			Country{
 				Code: "FR",
@@ -737,13 +737,13 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
-	api.Use(&rest.JsonpMiddleware{
+	api.Use(&rest.JSONpMiddleware{
 		CallbackNameKey: "cb",
 	})
 	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-		w.WriteJson(map[string]string{"Body": "Hello World!"})
+		w.WriteJSON(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
 }
@@ -772,7 +772,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	api.Use(&rest.AuthBasicMiddleware{
 		Realm: "test zone",
@@ -784,7 +784,7 @@ func main() {
 		},
 	})
 	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-		w.WriteJson(map[string]string{"Body": "Hello World!"})
+		w.WriteJSON(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
 }
@@ -837,13 +837,13 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	statusMw := &rest.StatusMiddleware{}
 	api.Use(statusMw)
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/.status", func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-			w.WriteJson(statusMw.GetStatus())
+			w.WriteJSON(statusMw.GetStatus())
 		}),
 	)
 	if err != nil {
@@ -880,7 +880,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	statusMw := &rest.StatusMiddleware{}
 	api.Use(statusMw)
 	api.Use(rest.DefaultDevStack...)
@@ -897,7 +897,7 @@ func main() {
 		rest.Get("/countries", GetAllCountries),
 		rest.Get("/.status", auth.MiddlewareFunc(
 			func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-				w.WriteJson(statusMw.GetStatus())
+				w.WriteJSON(statusMw.GetStatus())
 			},
 		)),
 	)
@@ -914,7 +914,7 @@ type Country struct {
 }
 
 func GetAllCountries(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-	w.WriteJson(
+	w.WriteJSON(
 		[]Country{
 			Country{
 				Code: "FR",
@@ -937,7 +937,7 @@ More advanced use cases.
 
 #### JWT
 
-Demonstrates how to use the [Json Web Token Auth Middleware](https://github.com/StephanDollberg/go-json-rest-middleware-jwt) to authenticate via a JWT token.
+Demonstrates how to use the [JSON Web Token Auth Middleware](https://github.com/StephanDollberg/go-json-rest-middleware-jwt) to authenticate via a JWT token.
 
 curl demo:
 ``` sh
@@ -960,7 +960,7 @@ import (
 )
 
 func handle_auth(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-	w.WriteJson(map[string]string{"authed": r.Env["REMOTE_USER"].(string)})
+	w.WriteJSON(map[string]string{"authed": r.Env["REMOTE_USER"].(string)})
 }
 
 func main() {
@@ -973,7 +973,7 @@ func main() {
 			return userId == "admin" && password == "admin"
 		}}
 
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	// we use the IfMiddleware to remove certain paths from needing authentication
 	api.Use(&rest.IfMiddleware{
@@ -1032,7 +1032,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(&rest.AccessLogApacheMiddleware{})
 	api.Use(rest.DefaultCommonStack...)
 	router, err := rest.MakeRouter(
@@ -1053,7 +1053,7 @@ func StreamThings(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
 	cpt := 0
 	for {
 		cpt++
-		w.WriteJson(
+		w.WriteJSON(
 			&Thing{
 				Name: fmt.Sprintf("thing #%d", cpt),
 			},
@@ -1101,7 +1101,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/message.txt", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
@@ -1205,7 +1205,7 @@ func main() {
 		MinVersion: "1.0.0",
 		MaxVersion: "3.0.0",
 	}
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/#version/message", svmw.MiddlewareFunc(
@@ -1213,11 +1213,11 @@ func main() {
 				version := req.Env["VERSION"].(*semver.Version)
 				if version.Major == 2 {
 					// http://en.wikipedia.org/wiki/Second-system_effect
-					w.WriteJson(map[string]string{
+					w.WriteJSON(map[string]string{
 						"Body": "Hello broken World!",
 					})
 				} else {
-					w.WriteJson(map[string]string{
+					w.WriteJSON(map[string]string{
 						"Body": "Hello World!",
 					})
 				}
@@ -1263,7 +1263,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(&statsd.StatsdMiddleware{})
 	api.Use(rest.DefaultDevStack...)
 	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
@@ -1271,7 +1271,7 @@ func main() {
 		// take more than 1ms so statsd can report it
 		time.Sleep(100 * time.Millisecond)
 
-		w.WriteJson(map[string]string{"Body": "Hello World!"})
+		w.WriteJSON(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
 }
@@ -1328,7 +1328,7 @@ func (mw *NewRelicMiddleware) MiddlewareFunc(handler rest.HandlerFunc) rest.Hand
 }
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	api.Use(&NewRelicMiddleware{
 		License: "<REPLACE WITH THE LICENSE KEY>",
@@ -1336,7 +1336,7 @@ func main() {
 		Verbose: true,
 	})
 	api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-		w.WriteJson(map[string]string{"Body": "Hello World!"})
+		w.WriteJSON(map[string]string{"Body": "Hello World!"})
 	}))
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
 }
@@ -1369,7 +1369,7 @@ import (
 )
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
@@ -1378,7 +1378,7 @@ func main() {
 				// wait 1 second
 				time.Sleep(time.Duration(1) * time.Second)
 
-				w.WriteJson(map[string]string{
+				w.WriteJSON(map[string]string{
 					"Message": fmt.Sprintf("%d seconds", cpt),
 				})
 				w.(http.ResponseWriter).Write([]byte("\n"))
@@ -1438,11 +1438,11 @@ func GetUser(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
 		Id:   req.PathParam("id"),
 		Name: "Antoine",
 	}
-	w.WriteJson(&user)
+	w.WriteJSON(&user)
 }
 
 func main() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		rest.Get("/users/:id", GetUser),
@@ -1490,11 +1490,11 @@ import (
 )
 
 func init() {
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	router, err := rest.MakeRouter(
 		&rest.Get("/message", func(ctx context.Context, w rest.ResponseWriter, req *rest.Request) {
-			w.WriteJson(map[string]string{"Body": "Hello World!"})
+			w.WriteJSON(map[string]string{"Body": "Hello World!"})
 		}),
 	)
 	if err != nil {
@@ -1556,7 +1556,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	api := rest.NewApi()
+	api := rest.NewAPI()
 	api.Use(rest.DefaultDevStack...)
 	api.SetApp(router)
 	log.Fatal(http.ListenAndServe(":8080", api.MakeHandler()))
@@ -1572,7 +1572,7 @@ func main() {
 
 Old v1 blog posts:
 
-- [(Blog Post) Introducing Go-Json-Rest] (http://blog.ant0ine.com/typepad/2013/04/introducing-go-json-rest.html)
+- [(Blog Post) Introducing Go-JSON-Rest] (http://blog.ant0ine.com/typepad/2013/04/introducing-go-json-rest.html)
 - [(Blog Post) Better URL Routing ?] (http://blog.ant0ine.com/typepad/2013/02/better-url-routing-golang-1.html)
 
 
@@ -1582,16 +1582,16 @@ Old v1 blog posts:
 
 * Public Middlewares. (12 included in the package)
 * A new App interface. (the router being the provided App)
-* A new Api object that manages the Middlewares and the App.
+* A new API object that manages the Middlewares and the App.
 * Optional and interchangeable App/router.
 
 ### Here is for instance the new minimal "Hello World!"
 
 ```go
-api := rest.NewApi()
+api := rest.NewAPI()
 api.Use(rest.DefaultDevStack...)
 api.SetApp(rest.AppSimple(func(ctx context.Context, w rest.ResponseWriter, r *rest.Request) {
-        w.WriteJson(map[string]string{"Body": "Hello World!"})
+        w.WriteJSON(map[string]string{"Body": "Hello World!"})
 }))
 http.ListenAndServe(":8080", api.MakeHandler())
 ```
@@ -1600,7 +1600,7 @@ http.ListenAndServe(":8080", api.MakeHandler())
 
 ### Deprecating the ResourceHandler
 
-V3 is about deprecating the ResourceHandler in favor of a new API that exposes the Middlewares. As a consequence, all the Middlewares are now public, and the new Api object helps putting them together as a stack. Some default stack configurations are offered. The router is now an App that sits on top of the stack of Middlewares. Which means that the router is no longer required to use Go-Json-Rest.
+V3 is about deprecating the ResourceHandler in favor of a new API that exposes the Middlewares. As a consequence, all the Middlewares are now public, and the new API object helps putting them together as a stack. Some default stack configurations are offered. The router is now an App that sits on top of the stack of Middlewares. Which means that the router is no longer required to use Go-JSON-Rest.
 
 *Design ideas and discussion [See here](https://github.com/AlexanderChen1989/issues/110)*
 
@@ -1614,14 +1614,14 @@ deprecation warning.
 ### How to map the ResourceHandler options to the new stack of middlewares ?
 
 * `EnableGzip bool`: Just include GzipMiddleware in the stack of middlewares.
-* `DisableJsonIndent bool`: Just don't include JsonIndentMiddleware in the stack of middlewares.
+* `DisableJSONIndent bool`: Just don't include JSONIndentMiddleware in the stack of middlewares.
 * `EnableStatusService bool`: Include StatusMiddleware in the stack and keep a reference to it to access GetStatus().
 * `EnableResponseStackTrace bool`: Same exact option but moved to RecoverMiddleware.
-* `EnableLogAsJson bool`: Include AccessLogJsonMiddleware, and possibly remove AccessLogApacheMiddleware.
+* `EnableLogAsJSON bool`: Include AccessLogJSONMiddleware, and possibly remove AccessLogApacheMiddleware.
 * `EnableRelaxedContentType bool`: Just don't include ContentTypeCheckerMiddleware.
 * `OuterMiddlewares []Middleware`: You are now building the full stack, OuterMiddlewares are the first in the list.
 * `PreRoutingMiddlewares []Middleware`: You are now building the full stack, OuterMiddlewares are the last in the list.
-* `Logger *log.Logger`: Same option but moved to AccessLogApacheMiddleware and AccessLogJsonMiddleware.
+* `Logger *log.Logger`: Same option but moved to AccessLogApacheMiddleware and AccessLogJSONMiddleware.
 * `LoggerFormat AccessLogFormat`: Same exact option but moved to AccessLogApacheMiddleware.
 * `DisableLogger bool`: Just don't include any access log middleware.
 * `ErrorLogger *log.Logger`: Same exact option but moved to RecoverMiddleware.
@@ -1647,7 +1647,7 @@ In fact the internal code of **go-json-rest** is itself implemented with Middlew
 
 ## Migration guide from v1 to v2
 
-**Go-Json-Rest** follows [Semver](http://semver.org/) and a few breaking changes have been introduced with the v2.
+**Go-JSON-Rest** follows [Semver](http://semver.org/) and a few breaking changes have been introduced with the v2.
 
 
 #### The import path has changed to `github.com/AlexanderChen1989/rest`
@@ -1749,7 +1749,7 @@ See for instance how to [protect this status endpoint with the AuthBasic middlew
 
 Overall, they provide the same features, but with two methods instead of three, better names, and without the confusing `UriForWithParams`.
 
-- `func (r *Request) UriBase() url.URL` is now `func (r *Request) BaseUrl() *url.URL`, Note the pointer as the returned value.
+- `func (r *Request) UriBase() url.URL` is now `func (r *Request) BaseURL() *url.URL`, Note the pointer as the returned value.
 
 - `func (r *Request) UriForWithParams(path string, parameters map[string][]string) url.URL` is now `func (r *Request) UrlFor(path string, queryParams map[string][]string) *url.URL`.
 

@@ -30,7 +30,7 @@ func routes() []*Route {
 	routes := []*Route{}
 	for _, path := range routePaths {
 		routes = append(routes, &Route{
-			HttpMethod: "GET",
+			HTTPMethod: "GET",
 			PathExp:    path,
 		})
 	}

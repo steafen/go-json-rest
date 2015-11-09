@@ -9,7 +9,7 @@ import (
 type Route struct {
 
 	// Any HTTP method. It will be used as uppercase to avoid common mistakes.
-	HttpMethod string
+	HTTPMethod string
 
 	// A string like "/resource/:id.json".
 	// Placeholders supported are:
@@ -41,7 +41,7 @@ func (route *Route) MakePath(pathParams map[string]string) string {
 // Equivalent to &Route{"HEAD", pathExp, handlerFunc}
 func Head(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "HEAD",
+		HTTPMethod: "HEAD",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -51,7 +51,7 @@ func Head(pathExp string, handlerFunc HandlerFunc) *Route {
 // Equivalent to &Route{"GET", pathExp, handlerFunc}
 func Get(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "GET",
+		HTTPMethod: "GET",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -61,7 +61,7 @@ func Get(pathExp string, handlerFunc HandlerFunc) *Route {
 // Equivalent to &Route{"POST", pathExp, handlerFunc}
 func Post(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "POST",
+		HTTPMethod: "POST",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -71,7 +71,7 @@ func Post(pathExp string, handlerFunc HandlerFunc) *Route {
 // Equivalent to &Route{"PUT", pathExp, handlerFunc}
 func Put(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "PUT",
+		HTTPMethod: "PUT",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -81,7 +81,7 @@ func Put(pathExp string, handlerFunc HandlerFunc) *Route {
 // Equivalent to &Route{"PATCH", pathExp, handlerFunc}
 func Patch(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "PATCH",
+		HTTPMethod: "PATCH",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -90,7 +90,7 @@ func Patch(pathExp string, handlerFunc HandlerFunc) *Route {
 // Delete is a shortcut method that instantiates a DELETE route. Equivalent to &Route{"DELETE", pathExp, handlerFunc}
 func Delete(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "DELETE",
+		HTTPMethod: "DELETE",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}
@@ -100,7 +100,7 @@ func Delete(pathExp string, handlerFunc HandlerFunc) *Route {
 // Equivalent to &Route{"OPTIONS", pathExp, handlerFunc}
 func Options(pathExp string, handlerFunc HandlerFunc) *Route {
 	return &Route{
-		HttpMethod: "OPTIONS",
+		HTTPMethod: "OPTIONS",
 		PathExp:    pathExp,
 		Func:       handlerFunc,
 	}

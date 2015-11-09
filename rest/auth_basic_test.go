@@ -28,7 +28,7 @@ func TestAuthBasic(t *testing.T) {
 	}
 
 	// api for testing failure
-	apiFailure := NewApi()
+	apiFailure := NewAPI()
 	apiFailure.Use(authMiddleware)
 	apiFailure.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		t.Error("Should never be executed")
@@ -38,7 +38,7 @@ func TestAuthBasic(t *testing.T) {
 	// simple request fails
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(401)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// auth with wrong cred and right method fails
 	wrongCredReq := test.MakeSimpleRequest("GET", "http://localhost/", nil)
@@ -46,7 +46,7 @@ func TestAuthBasic(t *testing.T) {
 	wrongCredReq.Header.Set("Authorization", "Basic "+encoded)
 	recorded = test.RunRequest(t, handler, wrongCredReq)
 	recorded.CodeIs(401)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// auth with right cred and wrong method fails
 	rightCredReq := test.MakeSimpleRequest("POST", "http://localhost/", nil)
@@ -54,10 +54,10 @@ func TestAuthBasic(t *testing.T) {
 	rightCredReq.Header.Set("Authorization", "Basic "+encoded)
 	recorded = test.RunRequest(t, handler, rightCredReq)
 	recorded.CodeIs(401)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// api for testing success
-	apiSuccess := NewApi()
+	apiSuccess := NewAPI()
 	apiSuccess.Use(authMiddleware)
 	apiSuccess.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
 		env := EnvFromContext(ctx)
@@ -68,7 +68,7 @@ func TestAuthBasic(t *testing.T) {
 		if user != "admin" {
 			t.Error("REMOTE_USER is expected to be 'admin'")
 		}
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// auth with right cred and right method succeeds
@@ -77,5 +77,5 @@ func TestAuthBasic(t *testing.T) {
 	rightCredReq.Header.Set("Authorization", "Basic "+encoded)
 	recorded = test.RunRequest(t, apiSuccess.MakeHandler(), rightCredReq)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 }

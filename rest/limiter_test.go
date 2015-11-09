@@ -10,14 +10,14 @@ import (
 )
 
 func TestLimiterMiddleware(t *testing.T) {
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(Limiter(tollbooth.NewLimiter(1, time.Second)))
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -29,7 +29,7 @@ func TestLimiterMiddleware(t *testing.T) {
 		recorded := test.RunRequest(t, handler, req)
 		if i > 1 {
 			recorded.CodeIs(429)
-			recorded.ContentTypeIsJson()
+			recorded.ContentTypeIsJSON()
 		}
 	}
 	for i := 0; i < 5; i++ {
@@ -38,6 +38,6 @@ func TestLimiterMiddleware(t *testing.T) {
 		req.RemoteAddr = "127.0.0.1:45344"
 		recorded := test.RunRequest(t, handler, req)
 		recorded.CodeIs(200)
-		recorded.ContentTypeIsJson()
+		recorded.ContentTypeIsJSON()
 	}
 }

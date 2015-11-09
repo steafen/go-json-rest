@@ -7,11 +7,11 @@ import (
 	"golang.org/x/net/context"
 )
 
-func TestApiNoAppNoMiddleware(t *testing.T) {
+func TestAPINoAppNoMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 	if api == nil {
-		t.Fatal("Api object must be instantiated")
+		t.Fatal("API object must be instantiated")
 	}
 
 	handler := api.MakeHandler()
@@ -23,11 +23,11 @@ func TestApiNoAppNoMiddleware(t *testing.T) {
 	recorded.CodeIs(200)
 }
 
-func TestApiSimpleAppNoMiddleware(t *testing.T) {
+func TestAPISimpleAppNoMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	handler := api.MakeHandler()
@@ -37,16 +37,16 @@ func TestApiSimpleAppNoMiddleware(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.BodyIs(`{"Id":"123"}`)
 }
 
 func TestDevStack(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 	api.Use(DefaultDevStack...)
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	handler := api.MakeHandler()
@@ -56,16 +56,16 @@ func TestDevStack(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.BodyIs("{\n  \"Id\": \"123\"\n}")
 }
 
 func TestProdStack(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 	api.Use(DefaultProdStack...)
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	handler := api.MakeHandler()
@@ -75,16 +75,16 @@ func TestProdStack(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.ContentEncodingIsGzip()
 }
 
 func TestCommonStack(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 	api.Use(DefaultCommonStack...)
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	handler := api.MakeHandler()
@@ -94,6 +94,6 @@ func TestCommonStack(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.BodyIs(`{"Id":"123"}`)
 }

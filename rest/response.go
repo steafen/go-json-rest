@@ -15,14 +15,14 @@ type ResponseWriter interface {
 	// Identical to the http.ResponseWriter interface
 	Header() http.Header
 
-	// Use EncodeJson to generate the payload, write the headers with http.StatusOK if
+	// Use EncodeJSON to generate the payload, write the headers with http.StatusOK if
 	// they are not already written, then write the payload.
 	// The Content-Type header is set to "application/json", unless already specified.
-	WriteJson(v interface{}) error
+	WriteJSON(v interface{}) error
 
 	// Encode the data structure to JSON, mainly used to wrap ResponseWriter in
 	// middlewares.
-	EncodeJson(v interface{}) ([]byte, error)
+	EncodeJSON(v interface{}) ([]byte, error)
 
 	// Similar to the http.ResponseWriter interface, with additional JSON related
 	// headers set.
@@ -34,7 +34,7 @@ type ResponseWriter interface {
 // http.Error(w, "error message", code)
 func Error(w ResponseWriter, error string, code int) {
 	w.WriteHeader(code)
-	err := w.WriteJson(map[string]string{"Error": error})
+	err := w.WriteJSON(map[string]string{"Error": error})
 	if err != nil {
 		panic(err)
 	}
@@ -67,7 +67,7 @@ func (w *responseWriter) WriteHeader(code int) {
 	w.wroteHeader = true
 }
 
-func (w *responseWriter) EncodeJson(v interface{}) ([]byte, error) {
+func (w *responseWriter) EncodeJSON(v interface{}) ([]byte, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -76,8 +76,8 @@ func (w *responseWriter) EncodeJson(v interface{}) ([]byte, error) {
 }
 
 // Encode the object in JSON and call Write.
-func (w *responseWriter) WriteJson(v interface{}) error {
-	b, err := w.EncodeJson(v)
+func (w *responseWriter) WriteJSON(v interface{}) error {
+	b, err := w.EncodeJSON(v)
 	if err != nil {
 		return err
 	}

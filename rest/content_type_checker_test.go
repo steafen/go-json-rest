@@ -9,14 +9,14 @@ import (
 
 func TestContentTypeCheckerMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(&ContentTypeCheckerMiddleware{})
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all

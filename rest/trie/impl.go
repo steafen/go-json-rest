@@ -31,7 +31,7 @@ func splitRelaxed(remaining string) (string, string) {
 }
 
 type node struct {
-	HttpMethodToRoute map[string]interface{}
+	HTTPMethodToRoute map[string]interface{}
 
 	Children       map[string]*node
 	ChildrenKeyLen int
@@ -50,16 +50,16 @@ func (n *node) addRoute(httpMethod, pathExp string, route interface{}, usedParam
 
 	if len(pathExp) == 0 {
 		// end of the path, leaf node, update the map
-		if n.HttpMethodToRoute == nil {
-			n.HttpMethodToRoute = map[string]interface{}{
+		if n.HTTPMethodToRoute == nil {
+			n.HTTPMethodToRoute = map[string]interface{}{
 				httpMethod: route,
 			}
 			return nil
 		} else {
-			if n.HttpMethodToRoute[httpMethod] != nil {
+			if n.HTTPMethodToRoute[httpMethod] != nil {
 				return errors.New("node.Route already set, duplicated path and method")
 			}
-			n.HttpMethodToRoute[httpMethod] = route
+			n.HTTPMethodToRoute[httpMethod] = route
 			return nil
 		}
 	}
@@ -182,7 +182,7 @@ func (n *node) compress() {
 	// compressable ?
 	canCompress := true
 	for _, node := range n.Children {
-		if node.HttpMethodToRoute != nil || node.SplatChild != nil || node.ParamChild != nil || node.RelaxedChild != nil {
+		if node.HTTPMethodToRoute != nil || node.SplatChild != nil || node.ParamChild != nil || node.RelaxedChild != nil {
 			canCompress = false
 		}
 	}
@@ -291,7 +291,7 @@ type Match struct {
 
 func (n *node) find(httpMethod, path string, context *findContext) {
 
-	if n.HttpMethodToRoute != nil && path == "" {
+	if n.HTTPMethodToRoute != nil && path == "" {
 		context.matchFunc(httpMethod, path, n)
 	}
 
@@ -367,12 +367,12 @@ func (t *Trie) FindRoutes(httpMethod, path string) []*Match {
 	context := newFindContext()
 	matches := []*Match{}
 	context.matchFunc = func(httpMethod, path string, node *node) {
-		if node.HttpMethodToRoute[httpMethod] != nil {
+		if node.HTTPMethodToRoute[httpMethod] != nil {
 			// path and method match, found a route !
 			matches = append(
 				matches,
 				&Match{
-					Route:  node.HttpMethodToRoute[httpMethod],
+					Route:  node.HTTPMethodToRoute[httpMethod],
 					Params: context.paramsAsMap(),
 				},
 			)
@@ -390,12 +390,12 @@ func (t *Trie) FindRoutesAndPathMatched(httpMethod, path string) ([]*Match, bool
 	matches := []*Match{}
 	context.matchFunc = func(httpMethod, path string, node *node) {
 		pathMatched = true
-		if node.HttpMethodToRoute[httpMethod] != nil {
+		if node.HTTPMethodToRoute[httpMethod] != nil {
 			// path and method match, found a route !
 			matches = append(
 				matches,
 				&Match{
-					Route:  node.HttpMethodToRoute[httpMethod],
+					Route:  node.HTTPMethodToRoute[httpMethod],
 					Params: context.paramsAsMap(),
 				},
 			)
@@ -411,7 +411,7 @@ func (t *Trie) FindRoutesForPath(path string) []*Match {
 	matches := []*Match{}
 	context.matchFunc = func(httpMethod, path string, node *node) {
 		params := context.paramsAsMap()
-		for _, route := range node.HttpMethodToRoute {
+		for _, route := range node.HTTPMethodToRoute {
 			matches = append(
 				matches,
 				&Match{

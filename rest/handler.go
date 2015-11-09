@@ -8,7 +8,7 @@ import (
 // ResourceHandler implements the http.Handler interface and acts a router for the defined Routes.
 // The defaults are intended to be developemnt friendly, for production you may want
 // to turn on gzip and disable the JSON indentation for instance.
-// ResourceHandler is now DEPRECATED in favor of the new Api object. See the migration guide.
+// ResourceHandler is now DEPRECATED in favor of the new API object. See the migration guide.
 type ResourceHandler struct {
 	internalRouter   *router
 	statusMiddleware *StatusMiddleware
@@ -19,7 +19,7 @@ type ResourceHandler struct {
 	EnableGzip bool
 
 	// If true, the JSON payload will be written in one line with no space.
-	DisableJsonIndent bool
+	DisableJSONIndent bool
 
 	// If true, the status service will be enabled. Various stats and status will
 	// then be available at GET /.status in a JSON format.
@@ -31,8 +31,8 @@ type ResourceHandler struct {
 
 	// If true, the records logged to the access log and the error log will be
 	// printed as JSON. Convenient for log parsing.
-	// See the AccessLogJsonRecord type for details of the access log JSON record.
-	EnableLogAsJson bool
+	// See the AccessLogJSONRecord type for details of the access log JSON record.
+	EnableLogAsJSON bool
 
 	// If true, the handler does NOT check the request Content-Type. Otherwise, it
 	// must be set to 'application/json' if the content is non-null.
@@ -62,7 +62,7 @@ type ResourceHandler struct {
 	Logger *log.Logger
 
 	// Define the format of the access log record.
-	// When EnableLogAsJson is false, this format is used to generate the access log.
+	// When EnableLogAsJSON is false, this format is used to generate the access log.
 	// See AccessLogFormat for the options and the predefined formats.
 	// Defaults to a developement friendly format specified by the Default constant.
 	LoggerFormat AccessLogFormat
@@ -86,7 +86,7 @@ type ResourceHandler struct {
 // if a request matches multiple Routes, the first one will be used.
 func (rh *ResourceHandler) SetRoutes(routes ...*Route) error {
 
-	log.Print("ResourceHandler is now DEPRECATED in favor of the new Api object, see the migration guide")
+	log.Print("ResourceHandler is now DEPRECATED in favor of the new API object, see the migration guide")
 
 	// intantiate all the middlewares based on the settings.
 	middlewares := []Middleware{}
@@ -97,9 +97,9 @@ func (rh *ResourceHandler) SetRoutes(routes ...*Route) error {
 
 	// log as the first, depends on timer and recorder.
 	if !rh.DisableLogger {
-		if rh.EnableLogAsJson {
+		if rh.EnableLogAsJSON {
 			middlewares = append(middlewares,
-				&AccessLogJsonMiddleware{
+				&AccessLogJSONMiddleware{
 					Logger: rh.Logger,
 				},
 			)
@@ -138,15 +138,15 @@ func (rh *ResourceHandler) SetRoutes(routes ...*Route) error {
 		)
 	}
 
-	if !rh.DisableJsonIndent {
-		middlewares = append(middlewares, &JsonIndentMiddleware{})
+	if !rh.DisableJSONIndent {
+		middlewares = append(middlewares, &JSONIndentMiddleware{})
 	}
 
 	// catch user errors
 	middlewares = append(middlewares,
 		&RecoverMiddleware{
 			Logger:                   rh.ErrorLogger,
-			EnableLogAsJson:          rh.EnableLogAsJson,
+			EnableLogAsJSON:          rh.EnableLogAsJSON,
 			EnableResponseStackTrace: rh.EnableResponseStackTrace,
 		},
 	)

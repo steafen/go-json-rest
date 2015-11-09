@@ -11,7 +11,7 @@ func TestResponseNotIndent(t *testing.T) {
 		false,
 	}
 
-	got, err := writer.EncodeJson(map[string]bool{"test": true})
+	got, err := writer.EncodeJSON(map[string]bool{"test": true})
 	if err != nil {
 		t.Error(err.Error())
 	}

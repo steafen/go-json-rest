@@ -11,12 +11,12 @@ import (
 
 func TestRecoverMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(&RecoverMiddleware{
 		Logger:                   log.New(ioutil.Discard, "", 0),
-		EnableLogAsJson:          false,
+		EnableLogAsJSON:          false,
 		EnableResponseStackTrace: true,
 	})
 
@@ -31,11 +31,11 @@ func TestRecoverMiddleware(t *testing.T) {
 	req := test.MakeSimpleRequest("GET", "http://localhost/", nil)
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(500)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// payload
 	payload := map[string]string{}
-	err := recorded.DecodeJsonPayload(&payload)
+	err := recorded.DecodeJSONPayload(&payload)
 	if err != nil {
 		t.Fatal(err)
 	}

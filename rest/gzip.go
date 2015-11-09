@@ -59,8 +59,8 @@ func (w *gzipResponseWriter) WriteHeader(code int) {
 }
 
 // Make sure the local Write is called.
-func (w *gzipResponseWriter) WriteJson(v interface{}) error {
-	b, err := w.EncodeJson(v)
+func (w *gzipResponseWriter) WriteJSON(v interface{}) error {
+	b, err := w.EncodeJSON(v)
 	if err != nil {
 		return err
 	}

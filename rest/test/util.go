@@ -55,7 +55,7 @@ func HeaderIs(t *testing.T, r *httptest.ResponseRecorder, headerKey, expectedVal
 	}
 }
 
-func ContentTypeIsJson(t *testing.T, r *httptest.ResponseRecorder) {
+func ContentTypeIsJSON(t *testing.T, r *httptest.ResponseRecorder) {
 	HeaderIs(t, r, "Content-Type", "application/json")
 }
 
@@ -70,7 +70,7 @@ func BodyIs(t *testing.T, r *httptest.ResponseRecorder, expectedBody string) {
 	}
 }
 
-func DecodeJsonPayload(r *httptest.ResponseRecorder, v interface{}) error {
+func DecodeJSONPayload(r *httptest.ResponseRecorder, v interface{}) error {
 	content, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return err
@@ -102,7 +102,7 @@ func (rd *Recorded) HeaderIs(headerKey, expectedValue string) {
 	HeaderIs(rd.T, rd.Recorder, headerKey, expectedValue)
 }
 
-func (rd *Recorded) ContentTypeIsJson() {
+func (rd *Recorded) ContentTypeIsJSON() {
 	rd.HeaderIs("Content-Type", "application/json")
 }
 
@@ -114,6 +114,6 @@ func (rd *Recorded) BodyIs(expectedBody string) {
 	BodyIs(rd.T, rd.Recorder, expectedBody)
 }
 
-func (rd *Recorded) DecodeJsonPayload(v interface{}) error {
-	return DecodeJsonPayload(rd.Recorder, v)
+func (rd *Recorded) DecodeJSONPayload(v interface{}) error {
+	return DecodeJSONPayload(rd.Recorder, v)
 }

@@ -9,7 +9,7 @@ import (
 
 func TestPoweredByMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(&PoweredByMiddleware{
@@ -18,7 +18,7 @@ func TestPoweredByMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -27,6 +27,6 @@ func TestPoweredByMiddleware(t *testing.T) {
 	req := test.MakeSimpleRequest("GET", "http://localhost/", nil)
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.HeaderIs("X-Powered-By", "test")
 }

@@ -20,7 +20,7 @@ type RecoverMiddleware struct {
 	Logger *log.Logger
 
 	// If true, the log records will be printed as JSON. Convenient for log parsing.
-	EnableLogAsJson bool
+	EnableLogAsJSON bool
 
 	// If true, when a "panic" happens, the error string and the stack trace will be
 	// printed in the 500 response body.
@@ -61,7 +61,7 @@ func (mw *RecoverMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 }
 
 func (mw *RecoverMiddleware) logError(message string) {
-	if mw.EnableLogAsJson {
+	if mw.EnableLogAsJSON {
 		record := map[string]string{
 			"error": message,
 		}

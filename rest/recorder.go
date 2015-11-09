@@ -52,8 +52,8 @@ func (w *recorderResponseWriter) WriteHeader(code int) {
 }
 
 // Make sure the local Write is called.
-func (w *recorderResponseWriter) WriteJson(v interface{}) error {
-	b, err := w.EncodeJson(v)
+func (w *recorderResponseWriter) WriteJSON(v interface{}) error {
+	b, err := w.EncodeJSON(v)
 	if err != nil {
 		return err
 	}

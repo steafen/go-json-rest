@@ -9,7 +9,7 @@ import (
 
 func TestGzipEnabled(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(&GzipMiddleware{})
@@ -17,7 +17,7 @@ func TestGzipEnabled(t *testing.T) {
 	// router app with success and error paths
 	router, err := MakeRouter(
 		Get("/ok", func(ctx context.Context, w ResponseWriter, r *Request) {
-			w.WriteJson(map[string]string{"Id": "123"})
+			w.WriteJSON(map[string]string{"Id": "123"})
 		}),
 		Get("/error", func(ctx context.Context, w ResponseWriter, r *Request) {
 			Error(w, "gzipped error", 500)
@@ -34,25 +34,25 @@ func TestGzipEnabled(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/ok", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.ContentEncodingIsGzip()
 	recorded.HeaderIs("Vary", "Accept-Encoding")
 
 	recorded = test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/error", nil))
 	recorded.CodeIs(500)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.ContentEncodingIsGzip()
 	recorded.HeaderIs("Vary", "Accept-Encoding")
 }
 
 func TestGzipDisabled(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// router app with success and error paths
 	router, err := MakeRouter(
 		Get("/ok", func(ctx context.Context, w ResponseWriter, r *Request) {
-			w.WriteJson(map[string]string{"Id": "123"})
+			w.WriteJSON(map[string]string{"Id": "123"})
 		}),
 	)
 	if err != nil {
@@ -64,7 +64,7 @@ func TestGzipDisabled(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/ok", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.HeaderIs("Content-Encoding", "")
 	recorded.HeaderIs("Vary", "")
 }

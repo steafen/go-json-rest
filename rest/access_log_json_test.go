@@ -10,13 +10,13 @@ import (
 	"golang.org/x/net/context"
 )
 
-func TestAccessLogJsonMiddleware(t *testing.T) {
+func TestAccessLogJSONMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middlewares stack
 	buffer := bytes.NewBufferString("")
-	api.Use(&AccessLogJsonMiddleware{
+	api.Use(&AccessLogJSONMiddleware{
 		Logger: log.New(buffer, "", 0),
 	})
 	api.Use(&TimerMiddleware{})
@@ -24,7 +24,7 @@ func TestAccessLogJsonMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -34,10 +34,10 @@ func TestAccessLogJsonMiddleware(t *testing.T) {
 	req.RemoteAddr = "127.0.0.1:1234"
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// log tests
-	decoded := &AccessLogJsonRecord{}
+	decoded := &AccessLogJSONRecord{}
 	err := json.Unmarshal(buffer.Bytes(), decoded)
 	if err != nil {
 		t.Fatal(err)
@@ -49,7 +49,7 @@ func TestAccessLogJsonMiddleware(t *testing.T) {
 	if decoded.RequestURI != "/" {
 		t.Errorf("RequestURI / expected, got %s", decoded.RequestURI)
 	}
-	if decoded.HttpMethod != "GET" {
-		t.Errorf("HttpMethod GET expected, got %s", decoded.HttpMethod)
+	if decoded.HTTPMethod != "GET" {
+		t.Errorf("HTTPMethod GET expected, got %s", decoded.HTTPMethod)
 	}
 }

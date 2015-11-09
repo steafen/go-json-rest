@@ -53,25 +53,25 @@ func (mw *AuthBasicMiddleware) MiddlewareFunc(handler HandlerFunc) HandlerFunc {
 			return
 		}
 
-		providedUserId, providedPassword, err := mw.decodeBasicAuthHeader(authHeader)
+		providedUserID, providedPassword, err := mw.decodeBasicAuthHeader(authHeader)
 
 		if err != nil {
 			Error(writer, "Invalid authentication", http.StatusBadRequest)
 			return
 		}
 
-		if !mw.Authenticator(providedUserId, providedPassword) {
+		if !mw.Authenticator(providedUserID, providedPassword) {
 			mw.unauthorized(writer)
 			return
 		}
 
-		if !mw.Authorizator(providedUserId, request) {
+		if !mw.Authorizator(providedUserID, request) {
 			mw.unauthorized(writer)
 			return
 		}
 
 		env := EnvFromContext(ctx)
-		env["REMOTE_USER"] = providedUserId
+		env["REMOTE_USER"] = providedUserID
 
 		handler(ctx, writer, request)
 	}

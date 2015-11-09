@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	// ErrJsonPayloadEmpty is returned when the JSON payload is empty.
-	ErrJsonPayloadEmpty = errors.New("JSON payload is empty")
+	// ErrJSONPayloadEmpty is returned when the JSON payload is empty.
+	ErrJSONPayloadEmpty = errors.New("JSON payload is empty")
 )
 
 // Request inherits from http.Request, and provides additional methods.
@@ -19,15 +19,15 @@ type Request struct {
 	*http.Request
 }
 
-// DecodeJsonPayload reads the request body and decodes the JSON using json.Unmarshal.
-func (r *Request) DecodeJsonPayload(v interface{}) error {
+// DecodeJSONPayload reads the request body and decodes the JSON using json.Unmarshal.
+func (r *Request) DecodeJSONPayload(v interface{}) error {
 	content, err := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 	if err != nil {
 		return err
 	}
 	if len(content) == 0 {
-		return ErrJsonPayloadEmpty
+		return ErrJSONPayloadEmpty
 	}
 	err = json.Unmarshal(content, v)
 	if err != nil {
@@ -36,9 +36,9 @@ func (r *Request) DecodeJsonPayload(v interface{}) error {
 	return nil
 }
 
-// BaseUrl returns a new URL object with the Host and Scheme taken from the request.
+// BaseURL returns a new URL object with the Host and Scheme taken from the request.
 // (without the trailing slash in the host)
-func (r *Request) BaseUrl() *url.URL {
+func (r *Request) BaseURL() *url.URL {
 	scheme := r.URL.Scheme
 	if scheme == "" {
 		scheme = "http"
@@ -58,8 +58,8 @@ func (r *Request) BaseUrl() *url.URL {
 // UrlFor returns the URL object from UriBase with the Path set to path, and the query
 // string built with queryParams.
 func (r *Request) UrlFor(path string, queryParams map[string][]string) *url.URL {
-	baseUrl := r.BaseUrl()
-	baseUrl.Path = path
+	baseURL := r.BaseURL()
+	baseURL.Path = path
 	if queryParams != nil {
 		query := url.Values{}
 		for k, v := range queryParams {
@@ -67,9 +67,9 @@ func (r *Request) UrlFor(path string, queryParams map[string][]string) *url.URL 
 				query.Add(k, vv)
 			}
 		}
-		baseUrl.RawQuery = query.Encode()
+		baseURL.RawQuery = query.Encode()
 	}
-	return baseUrl
+	return baseURL
 }
 
 // CorsInfo contains the CORS request info derived from a rest.Request.

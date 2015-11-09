@@ -9,18 +9,18 @@ import (
 	"golang.org/x/net/context"
 )
 
-// AccessLogJsonMiddleware produces the access log with records written as JSON. This middleware
+// AccessLogJSONMiddleware produces the access log with records written as JSON. This middleware
 // depends on TimerMiddleware and RecorderMiddleware that must be in the wrapped middlewares. It
 // also uses request.Env["REMOTE_USER"].(string) set by the auth middlewares.
-type AccessLogJsonMiddleware struct {
+type AccessLogJSONMiddleware struct {
 
 	// Logger points to the logger object used by this middleware, it defaults to
 	// log.New(os.Stderr, "", 0).
 	Logger *log.Logger
 }
 
-// MiddlewareFunc makes AccessLogJsonMiddleware implement the Middleware interface.
-func (mw *AccessLogJsonMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
+// MiddlewareFunc makes AccessLogJSONMiddleware implement the Middleware interface.
+func (mw *AccessLogJSONMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 
 	// set the default Logger
 	if mw.Logger == nil {
@@ -32,23 +32,23 @@ func (mw *AccessLogJsonMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		// call the handler
 		h(ctx, w, r)
 
-		mw.Logger.Printf("%s", makeAccessLogJsonRecord(ctx, r).asJson())
+		mw.Logger.Printf("%s", makeAccessLogJSONRecord(ctx, r).asJSON())
 	}
 }
 
-// AccessLogJsonRecord is the data structure used by AccessLogJsonMiddleware to create the JSON
+// AccessLogJSONRecord is the data structure used by AccessLogJSONMiddleware to create the JSON
 // records. (Public for documentation only, no public method uses it)
-type AccessLogJsonRecord struct {
+type AccessLogJSONRecord struct {
 	Timestamp    *time.Time
 	StatusCode   int
 	ResponseTime *time.Duration
-	HttpMethod   string
+	HTTPMethod   string
 	RequestURI   string
 	RemoteUser   string
 	UserAgent    string
 }
 
-func makeAccessLogJsonRecord(ctx context.Context, r *Request) *AccessLogJsonRecord {
+func makeAccessLogJSONRecord(ctx context.Context, r *Request) *AccessLogJSONRecord {
 	env := EnvFromContext(ctx)
 	var timestamp *time.Time
 	if env["START_TIME"] != nil {
@@ -70,18 +70,18 @@ func makeAccessLogJsonRecord(ctx context.Context, r *Request) *AccessLogJsonReco
 		remoteUser = env["REMOTE_USER"].(string)
 	}
 
-	return &AccessLogJsonRecord{
+	return &AccessLogJSONRecord{
 		Timestamp:    timestamp,
 		StatusCode:   statusCode,
 		ResponseTime: responseTime,
-		HttpMethod:   r.Method,
+		HTTPMethod:   r.Method,
 		RequestURI:   r.URL.RequestURI(),
 		RemoteUser:   remoteUser,
 		UserAgent:    r.UserAgent(),
 	}
 }
 
-func (r *AccessLogJsonRecord) asJson() []byte {
+func (r *AccessLogJSONRecord) asJSON() []byte {
 	b, err := json.Marshal(r)
 	if err != nil {
 		panic(err)

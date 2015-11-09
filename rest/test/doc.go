@@ -1,4 +1,4 @@
-// Utility functions to help writing tests for a Go-Json-Rest app
+// Utility functions to help writing tests for a Go-JSON-Rest app
 //
 // Go comes with net/http/httptest to help writing test for an http
 // server. When this http server implements a JSON REST API, some basic
@@ -14,11 +14,11 @@
 //      )
 //
 //      func TestSimpleRequest(t *testing.T) {
-//              api := rest.NewApi()
+//              api := rest.NewAPI()
 //              api.Use(rest.DefaultDevStack...)
 //              router, err := rest.MakeRouter(
 //                      rest.Get("/r", func(w rest.ResponseWriter, r *rest.Request) {
-//                              w.WriteJson(map[string]string{"Id": "123"})
+//                              w.WriteJSON(map[string]string{"Id": "123"})
 //                      }),
 //              )
 //              if err != nil {
@@ -28,6 +28,6 @@
 //              recorded := test.RunRequest(t, api.MakeHandler(),
 //                      test.MakeSimpleRequest("GET", "http://1.2.3.4/r", nil))
 //              recorded.CodeIs(200)
-//              recorded.ContentTypeIsJson()
+//              recorded.ContentTypeIsJSON()
 //      }
 package test

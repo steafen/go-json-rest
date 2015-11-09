@@ -29,7 +29,7 @@ func (mw *LimiterMiddleware) MiddlewareFunc(h HandlerFunc) HandlerFunc {
 		httpError := tollbooth.LimitByRequest(mw.limiter, r.Request)
 		if httpError != nil {
 			w.WriteHeader(httpError.StatusCode)
-			w.WriteJson(map[string]string{"status": "error", "msg": httpError.Message})
+			w.WriteJSON(map[string]string{"status": "error", "msg": httpError.Message})
 			return
 		}
 

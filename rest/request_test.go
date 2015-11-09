@@ -17,17 +17,17 @@ func defaultRequest(method string, urlStr string, body io.Reader, t *testing.T) 
 	}
 }
 
-func TestRequestEmptyJson(t *testing.T) {
+func TestRequestEmptyJSON(t *testing.T) {
 	req := defaultRequest("POST", "http://localhost", strings.NewReader(""), t)
-	err := req.DecodeJsonPayload(nil)
-	if err != ErrJsonPayloadEmpty {
-		t.Error("Expected ErrJsonPayloadEmpty")
+	err := req.DecodeJSONPayload(nil)
+	if err != ErrJSONPayloadEmpty {
+		t.Error("Expected ErrJSONPayloadEmpty")
 	}
 }
 
-func TestRequestBaseUrl(t *testing.T) {
+func TestRequestBaseURL(t *testing.T) {
 	req := defaultRequest("GET", "http://localhost", nil, t)
-	urlBase := req.BaseUrl()
+	urlBase := req.BaseURL()
 	urlString := urlBase.String()
 
 	expected := "http://localhost"
@@ -38,7 +38,7 @@ func TestRequestBaseUrl(t *testing.T) {
 
 func TestRequestUrlScheme(t *testing.T) {
 	req := defaultRequest("GET", "https://localhost", nil, t)
-	urlBase := req.BaseUrl()
+	urlBase := req.BaseURL()
 
 	expected := "https"
 	if urlBase.Scheme != expected {

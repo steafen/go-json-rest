@@ -16,7 +16,7 @@ type App interface {
 }
 
 // AppSimple is an adapter type that makes it easy to write an App with a simple function.
-// eg: rest.NewApi(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) { ... }))
+// eg: rest.NewAPI(rest.AppSimple(func(w rest.ResponseWriter, r *rest.Request) { ... }))
 type AppSimple HandlerFunc
 
 // AppFunc makes AppSimple implement the App interface.

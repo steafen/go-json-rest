@@ -13,7 +13,7 @@ import (
 
 func TestAccessLogApacheMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middlewares stack
 	buffer := bytes.NewBufferString("")
@@ -27,7 +27,7 @@ func TestAccessLogApacheMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -37,7 +37,7 @@ func TestAccessLogApacheMiddleware(t *testing.T) {
 	req.RemoteAddr = "127.0.0.1:1234"
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// log tests, eg: '127.0.0.1 - - 29/Nov/2014:22:28:34 +0000 "GET / HTTP/1.1" 200 12'
 	apacheCommon := regexp.MustCompile(`127.0.0.1 - - \d{2}/\w{3}/\d{4}:\d{2}:\d{2}:\d{2} [+\-]\d{4}\ "GET / HTTP/1.1" 200 12`)
@@ -49,7 +49,7 @@ func TestAccessLogApacheMiddleware(t *testing.T) {
 
 func TestAccessLogApacheMiddlewareMissingData(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the uncomplete middlewares stack
 	buffer := bytes.NewBufferString("")
@@ -61,7 +61,7 @@ func TestAccessLogApacheMiddlewareMissingData(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(map[string]string{"Id": "123"})
+		w.WriteJSON(map[string]string{"Id": "123"})
 	}))
 
 	// wrap all
@@ -70,7 +70,7 @@ func TestAccessLogApacheMiddlewareMissingData(t *testing.T) {
 	req := test.MakeSimpleRequest("GET", "http://localhost/", nil)
 	recorded := test.RunRequest(t, handler, req)
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 
 	// not much to log when the Env data is missing, but this should still work
 	apacheCommon := regexp.MustCompile(` - -  "GET / HTTP/1.1" 0 -`)

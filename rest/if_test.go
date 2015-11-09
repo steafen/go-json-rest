@@ -9,7 +9,7 @@ import (
 
 func TestIfMiddleware(t *testing.T) {
 
-	api := NewApi()
+	api := NewAPI()
 
 	// the middleware to test
 	api.Use(&IfMiddleware{
@@ -37,7 +37,7 @@ func TestIfMiddleware(t *testing.T) {
 
 	// a simple app
 	api.SetApp(AppSimple(func(ctx context.Context, w ResponseWriter, r *Request) {
-		w.WriteJson(EnvFromContext(ctx))
+		w.WriteJSON(EnvFromContext(ctx))
 	}))
 
 	// wrap all
@@ -45,11 +45,11 @@ func TestIfMiddleware(t *testing.T) {
 
 	recorded := test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.BodyIs("{\"FALSE_MIDDLEWARE\":true}")
 
 	recorded = test.RunRequest(t, handler, test.MakeSimpleRequest("GET", "http://localhost/true", nil))
 	recorded.CodeIs(200)
-	recorded.ContentTypeIsJson()
+	recorded.ContentTypeIsJSON()
 	recorded.BodyIs("{\"TRUE_MIDDLEWARE\":true}")
 }
