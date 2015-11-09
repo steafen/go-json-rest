@@ -55,9 +55,9 @@ func (r *Request) BaseURL() *url.URL {
 	}
 }
 
-// UrlFor returns the URL object from UriBase with the Path set to path, and the query
+// URLFor returns the URL object from UriBase with the Path set to path, and the query
 // string built with queryParams.
-func (r *Request) UrlFor(path string, queryParams map[string][]string) *url.URL {
+func (r *Request) URLFor(path string, queryParams map[string][]string) *url.URL {
 	baseURL := r.BaseURL()
 	baseURL.Path = path
 	if queryParams != nil {
@@ -77,7 +77,7 @@ type CorsInfo struct {
 	IsCors      bool
 	IsPreflight bool
 	Origin      string
-	OriginUrl   *url.URL
+	OriginURL   *url.URL
 
 	// The header value is converted to uppercase to avoid common mistakes.
 	AccessControlRequestMethod string
@@ -91,7 +91,7 @@ func (r *Request) GetCorsInfo() *CorsInfo {
 
 	origin := r.Header.Get("Origin")
 
-	var originUrl *url.URL
+	var originURL *url.URL
 	var isCors bool
 
 	if origin == "" {
@@ -100,8 +100,8 @@ func (r *Request) GetCorsInfo() *CorsInfo {
 		isCors = true
 	} else {
 		var err error
-		originUrl, err = url.ParseRequestURI(origin)
-		isCors = err == nil && r.Host != originUrl.Host
+		originURL, err = url.ParseRequestURI(origin)
+		isCors = err == nil && r.Host != originURL.Host
 	}
 
 	reqMethod := r.Header.Get("Access-Control-Request-Method")
@@ -121,7 +121,7 @@ func (r *Request) GetCorsInfo() *CorsInfo {
 		IsCors:                      isCors,
 		IsPreflight:                 isPreflight,
 		Origin:                      origin,
-		OriginUrl:                   originUrl,
+		OriginURL:                   originURL,
 		AccessControlRequestMethod:  strings.ToUpper(reqMethod),
 		AccessControlRequestHeaders: reqHeaders,
 	}

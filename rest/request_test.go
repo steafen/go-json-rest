@@ -46,12 +46,12 @@ func TestRequestUrlScheme(t *testing.T) {
 	}
 }
 
-func TestRequestUrlFor(t *testing.T) {
+func TestRequestURLFor(t *testing.T) {
 	req := defaultRequest("GET", "http://localhost", nil, t)
 
 	path := "/foo/bar"
 
-	urlObj := req.UrlFor(path, nil)
+	urlObj := req.URLFor(path, nil)
 	if urlObj.Path != path {
 		t.Error(path + " was expected to be the path, but got " + urlObj.Path)
 	}
@@ -62,14 +62,14 @@ func TestRequestUrlFor(t *testing.T) {
 	}
 }
 
-func TestRequestUrlForQueryString(t *testing.T) {
+func TestRequestURLForQueryString(t *testing.T) {
 	req := defaultRequest("GET", "http://localhost", nil, t)
 
 	params := map[string][]string{
 		"id": []string{"foo", "bar"},
 	}
 
-	urlObj := req.UrlFor("/foo/bar", params)
+	urlObj := req.URLFor("/foo/bar", params)
 
 	expected := "http://localhost/foo/bar?id=foo&id=bar"
 	if urlObj.String() != expected {
@@ -107,8 +107,8 @@ func TestCorsInfoNullOrigin(t *testing.T) {
 	if corsInfo.IsPreflight == true {
 		t.Error("This is not a Preflight request")
 	}
-	if corsInfo.OriginUrl != nil {
-		t.Error("OriginUrl cannot be set")
+	if corsInfo.OriginURL != nil {
+		t.Error("OriginURL cannot be set")
 	}
 }
 
@@ -142,7 +142,7 @@ func TestCorsInfoPreflightCors(t *testing.T) {
 	if corsInfo.Origin != "http://another.host" {
 		t.Error("Origin must be identical to the header value")
 	}
-	if corsInfo.OriginUrl == nil {
-		t.Error("OriginUrl must be set")
+	if corsInfo.OriginURL == nil {
+		t.Error("OriginURL must be set")
 	}
 }

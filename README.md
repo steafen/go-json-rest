@@ -1751,7 +1751,7 @@ Overall, they provide the same features, but with two methods instead of three, 
 
 - `func (r *Request) UriBase() url.URL` is now `func (r *Request) BaseURL() *url.URL`, Note the pointer as the returned value.
 
-- `func (r *Request) UriForWithParams(path string, parameters map[string][]string) url.URL` is now `func (r *Request) UrlFor(path string, queryParams map[string][]string) *url.URL`.
+- `func (r *Request) UriForWithParams(path string, parameters map[string][]string) url.URL` is now `func (r *Request) URLFor(path string, queryParams map[string][]string) *url.URL`.
 
 - `func (r *Request) UriFor(path string) url.URL` has be removed.
 
