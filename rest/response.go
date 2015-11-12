@@ -59,6 +59,11 @@ type responseWriter struct {
 	wroteHeader bool
 }
 
+// NewResponseWriterForTest helper for test
+func NewResponseWriterForTest(w http.ResponseWriter) *responseWriter {
+	return &responseWriter{w, false}
+}
+
 func (w *responseWriter) WriteHeader(code int) {
 	if w.Header().Get("Content-Type") == "" {
 		w.Header().Set("Content-Type", "application/json")
