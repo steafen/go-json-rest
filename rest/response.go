@@ -27,6 +27,9 @@ type ResponseWriter interface {
 	// Similar to the http.ResponseWriter interface, with additional JSON related
 	// headers set.
 	WriteHeader(int)
+
+	// io.Writer
+	Write([]byte) (int, error)
 }
 
 // Error produces an error response in JSON with the following structure, '{"Error":"My error message"}'
